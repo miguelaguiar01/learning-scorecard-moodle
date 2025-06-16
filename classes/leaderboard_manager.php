@@ -78,6 +78,62 @@ class leaderboard_manager {
         
         return $leaderboard;
     }
+
+    /**
+     * Get guild-focused leaderboard
+     */
+    public static function get_guild_leaderboard($courseid) {
+        
+        // Get all groups in this course
+        $groups = groups_get_all_groups($courseid);
+        
+        if (empty($groups)) {
+            return []; // No groups in this course
+        }
+        
+        $guild_leaderboard = [];
+        
+        foreach ($groups as $group) {
+            // Get all members of this group
+            $members = groups_get_members($group->id);
+            
+            if (empty($members)) {
+                continue; // Skip empty groups
+            }
+            
+            $total_guild_xp = 0;
+            $member_count = count($members);
+            
+            // Calculate total XP for all group members
+            foreach ($members as $member) {
+                $quiz_data = self::get_quiz_xp_data($member->id, $courseid);
+                $exercise_data = self::get_exercise_xp_data($member->id, $courseid);
+                $bonus_xp = self::get_bonus_xp($member->id, $courseid);
+                
+                $member_total_xp = $quiz_data['xp'] + $exercise_data['xp'] + $bonus_xp;
+                $total_guild_xp += $member_total_xp;
+            }
+            
+            $average_member_xp = $member_count > 0 ? round($total_guild_xp / $member_count) : 0;
+            
+            $guild_data = [
+                'guild_id' => $group->id,
+                'guild_name' => $group->name,
+                'guild_members' => $member_count,
+                'average_member_xp' => $average_member_xp,
+                'total_guild_xp' => $total_guild_xp
+            ];
+            
+            $guild_leaderboard[] = $guild_data;
+        }
+        
+        // Sort by total guild XP (descending)
+        usort($guild_leaderboard, function($a, $b) {
+            return $b['total_guild_xp'] - $a['total_guild_xp'];
+        });
+        
+        return $guild_leaderboard;
+    }
     
     /**
      * Get exercise-focused leaderboard
@@ -109,6 +165,81 @@ class leaderboard_manager {
         });
         
         return $leaderboard;
+    }
+
+    /**
+     * Get combined leaderboard (students ranked by sum of positions across all leaderboards)
+     */
+    public static function get_combined_leaderboard($courseid) {
+        global $DB;
+        
+        // Get all three leaderboards
+        $all_leaderboard = self::get_all_leaderboard($courseid);
+        $quiz_leaderboard = self::get_quiz_leaderboard($courseid);
+        $exercise_leaderboard = self::get_exercise_leaderboard($courseid);
+        
+        // Create position maps for each leaderboard
+        $all_positions = [];
+        $quiz_positions = [];
+        $exercise_positions = [];
+        
+        // Map positions for Overall leaderboard
+        foreach ($all_leaderboard as $position => $student) {
+            $all_positions[$student['userid']] = $position + 1; // +1 because array is 0-indexed
+        }
+        
+        // Map positions for Quiz leaderboard
+        foreach ($quiz_leaderboard as $position => $student) {
+            $quiz_positions[$student['userid']] = $position + 1;
+        }
+        
+        // Map positions for Exercise leaderboard
+        foreach ($exercise_leaderboard as $position => $student) {
+            $exercise_positions[$student['userid']] = $position + 1;
+        }
+        
+        // Get all students who appear in at least one leaderboard
+        $all_userids = array_unique(array_merge(
+            array_keys($all_positions),
+            array_keys($quiz_positions), 
+            array_keys($exercise_positions)
+        ));
+        
+        $combined_leaderboard = [];
+        
+        foreach ($all_userids as $userid) {
+            // Get user info
+            $user = $DB->get_record('user', ['id' => $userid]);
+            if (!$user) continue;
+            
+            // Get positions (use high number if not present in a leaderboard)
+            $max_position = max(count($all_leaderboard), count($quiz_leaderboard), count($exercise_leaderboard)) + 1;
+            
+            $all_pos = isset($all_positions[$userid]) ? $all_positions[$userid] : $max_position;
+            $quiz_pos = isset($quiz_positions[$userid]) ? $quiz_positions[$userid] : $max_position;
+            $exercise_pos = isset($exercise_positions[$userid]) ? $exercise_positions[$userid] : $max_position;
+            
+            // Calculate combined score (sum of positions - lower is better)
+            $combined_score = $all_pos + $quiz_pos + $exercise_pos;
+            
+            $student_data = [
+                'userid' => $userid,
+                'fullname' => fullname($user),
+                'all_position' => $all_pos,
+                'quiz_position' => $quiz_pos,
+                'exercise_position' => $exercise_pos,
+                'combined_score' => $combined_score
+            ];
+            
+            $combined_leaderboard[] = $student_data;
+        }
+        
+        // Sort by combined score (ascending - lower score is better)
+        usort($combined_leaderboard, function($a, $b) {
+            return $a['combined_score'] - $b['combined_score'];
+        });
+        
+        return $combined_leaderboard;
     }
     
     /**

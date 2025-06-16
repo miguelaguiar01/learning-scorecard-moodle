@@ -32,6 +32,48 @@
     background-color: #f8f9fa !important;
 }
 
+/* Guild-specific styling */
+.guild-leaderboard .generaltable tbody tr:nth-child(1) {
+    background-color: #ffd700 !important; /* Gold for top guild */
+}
+
+.guild-leaderboard .generaltable tbody tr:nth-child(2) {
+    background-color: #c0c0c0 !important; /* Silver for second guild */
+}
+
+.guild-leaderboard .generaltable tbody tr:nth-child(3) {
+    background-color: #cd7f32 !important; /* Bronze for third guild */
+}
+
+/* Guild name styling */
+.guild-name {
+    font-weight: bold;
+    color: #495057;
+}
+
+/* Combined leaderboard styling */
+.combined-leaderboard .position-cell {
+    font-size: 0.9em;
+    color: #6c757d;
+}
+
+.combined-leaderboard .combined-score {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.combined-leaderboard tbody tr:nth-child(1) .combined-score {
+    color: #ffd700; /* Gold for champion */
+}
+
+.combined-leaderboard tbody tr:nth-child(2) .combined-score {
+    color: #c0c0c0; /* Silver */
+}
+
+.combined-leaderboard tbody tr:nth-child(3) .combined-score {
+    color: #cd7f32; /* Bronze */
+}
+
 /* XP column highlighting */
 .generaltable td:last-child {
     font-weight: bold;
@@ -48,7 +90,7 @@
     .generaltable {
         font-size: 0.85em;
     }
-    
+
     .leaderboard-stats {
         padding: 10px;
     }

@@ -24,7 +24,9 @@ echo $OUTPUT->heading(get_string('leaderboard', 'local_learning_scorecard'));
 $tabs = array(
     'all' => get_string('leaderboard_all', 'local_learning_scorecard'),
     'quizzes' => get_string('leaderboard_quizzes', 'local_learning_scorecard'),
-    'exercises' => get_string('leaderboard_exercises', 'local_learning_scorecard')
+    'exercises' => get_string('leaderboard_exercises', 'local_learning_scorecard'),
+    'guilds' => get_string('leaderboard_guilds', 'local_learning_scorecard'),
+    'combined' => get_string('leaderboard_combined', 'local_learning_scorecard')
 );
 
 // Create tab navigation using Moodle's native tab system
@@ -60,7 +62,29 @@ switch ($tab) {
             'exercise_xp' => get_string('exercise_xp', 'local_learning_scorecard')
         );
         break;
-    
+
+    case 'guilds':
+        $leaderboard = \local_learning_scorecard\leaderboard_manager::get_guild_leaderboard($courseid);
+        $columns = array(
+            'rank' => get_string('rank', 'local_learning_scorecard'),
+            'guild_name' => get_string('guild_name', 'local_learning_scorecard'),
+            'guild_members' => get_string('member_count', 'local_learning_scorecard'),
+            'average_member_xp' => get_string('average_member_xp', 'local_learning_scorecard'),
+            'total_guild_xp' => get_string('total_guild_xp', 'local_learning_scorecard'),
+        );
+        break;
+
+    case 'combined':
+        $leaderboard = \local_learning_scorecard\leaderboard_manager::get_combined_leaderboard($courseid);
+        $columns = array(
+            'rank' => get_string('rank', 'local_learning_scorecard'),
+            'student' => get_string('student', 'local_learning_scorecard'),
+            'all_position' => get_string('all_position', 'local_learning_scorecard'),
+            'quiz_position' => get_string('quiz_position', 'local_learning_scorecard'),
+            'exercise_position' => get_string('exercise_position', 'local_learning_scorecard'),
+        );
+        break;
+
     case 'all':
     default:
         $leaderboard = \local_learning_scorecard\leaderboard_manager::get_all_leaderboard($courseid);
@@ -118,6 +142,16 @@ if (!empty($leaderboard)) {
         case 'exercises':
             $total_xp = array_sum(array_column($leaderboard, 'exercise_xp'));
             echo '<p>' . get_string('total_exercise_xp', 'local_learning_scorecard') . ': ' . $total_xp . '</p>';
+            break;
+        case 'guilds':
+            $total_xp = array_sum(array_column($leaderboard, 'total_guild_xp'));
+            echo '<p>' . get_string('total_guild_xp', 'local_learning_scorecard') . ': ' . $total_xp . '</p>';
+            break;
+        case 'combined':
+            if (!empty($leaderboard)) {
+                $best_score = min(array_column($leaderboard, 'combined_score'));
+                echo '<p>' . get_string('participating_students', 'local_learning_scorecard') . ': ' . count($leaderboard) . '</p>';
+            }
             break;
         case 'all':
         default:
