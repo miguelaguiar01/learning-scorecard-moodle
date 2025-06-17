@@ -7,31 +7,25 @@ $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 
 require_login($course);
 $context = context_course::instance($courseid);
-require_capability('moodle/course:manageactivities', $context); // Only teachers can access
+require_capability('moodle/course:manageactivities', $context);
 
 $PAGE->set_url('/local/learning_scorecard/ls_settings.php', array('id' => $courseid));
 $PAGE->set_title('Learning Scorecard Settings');
 $PAGE->set_heading($course->fullname);
 $PAGE->set_context($context);
 
-echo $OUTPUT->header();
-
-// Breadcrumb navigation
-$leaderboard_url = new moodle_url('/local/learning_scorecard/index.php', array('id' => $courseid));
-echo '<nav aria-label="breadcrumb">';
-echo '<ol class="breadcrumb">';
-echo '<li class="breadcrumb-item"><a href="' . $leaderboard_url . '">Leaderboard</a></li>';
-echo '<li class="breadcrumb-item active" aria-current="page">Learning Scorecard Settings</li>';
-echo '</ol>';
-echo '</nav>';
-
-echo $OUTPUT->heading('Learning Scorecard Settings');
-
-// Handle form submission for any section
+// HANDLE ALL FORM PROCESSING HERE - BEFORE ANY OUTPUT
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && confirm_sesskey()) {
     
-    // Handle XP Settings
-    if (isset($_POST['section']) && $_POST['section'] === 'ls_settings') {
+    // Handle reset action
+    if (isset($_POST['action']) && $_POST['action'] === 'reset') {
+        $default_settings = \local_learning_scorecard\xp_settings_manager::get_course_settings(0);
+        \local_learning_scorecard\xp_settings_manager::save_course_settings($courseid, $default_settings);
+        redirect($PAGE->url, 'Settings reset to defaults!', 2, \core\output\notification::NOTIFY_SUCCESS);
+    }
+    
+    // Handle XP Settings save
+    if (isset($_POST['section']) && $_POST['section'] === 'xp_settings') {
         $settings = array(
             'quiz_base_xp' => required_param('quiz_base_xp', PARAM_INT),
             'exercise_base_xp' => required_param('exercise_base_xp', PARAM_INT),
@@ -44,18 +38,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && confirm_sesskey()) {
         );
         
         \local_learning_scorecard\xp_settings_manager::save_course_settings($courseid, $settings);
-        echo $OUTPUT->notification('XP Settings saved successfully!', 'notifysuccess');
+        redirect($PAGE->url, 'XP Settings saved successfully!', 2, \core\output\notification::NOTIFY_SUCCESS);
     }
+}
+
+// Get current settings (this will be the updated settings after save/reset)
+$current_xp_settings = \local_learning_scorecard\xp_settings_manager::get_course_settings($courseid);
+
+// NOW START THE PAGE OUTPUT
+echo $OUTPUT->header();
+
+// Breadcrumb navigation
+$leaderboard_url = new moodle_url('/local/learning_scorecard/index.php', array('id' => $courseid));
+echo '<nav aria-label="breadcrumb">';
+echo '<ol class="breadcrumb">';
+echo '<li class="breadcrumb-item"><a href="' . $leaderboard_url . '">Leaderboard</a></li>';
+echo '<li class="breadcrumb-item active" aria-current="page">Learning Scorecard Settings</li>';
+echo '</ol>';
+echo '</nav>';
+
+echo $OUTPUT->heading('Learning Scorecard Settings');
     
     // Space for future settings sections:
     // - Badge Settings
     // - Leaderboard Display Settings  
     // - Notification Settings
     // - Competition Settings
-}
-
-// Get current settings
-$current_xp_settings = \local_learning_scorecard\xp_settings_manager::get_course_settings($courseid);
 
 ?>
 
@@ -95,7 +103,7 @@ $current_xp_settings = \local_learning_scorecard\xp_settings_manager::get_course
                         <div class="form-group mb-3">
                             <label for="forum_post_xp" class="form-label fw-bold">Forum Post XP</label>
                             <input type="number" class="form-control" name="forum_post_xp" id="forum_post_xp" 
-                                   value="<?php echo $current_xp_settings['forum_post_xp']; ?>" min="1" max="100" required>
+                                   value="<?php echo $current_xp_settings['forum_post_xp']; ?>" min="1" max="1000" required>
                             <small class="form-text text-muted">XP awarded for each forum post or reply</small>
                         </div>
 
@@ -142,9 +150,10 @@ $current_xp_settings = \local_learning_scorecard\xp_settings_manager::get_course
                     <button type="submit" class="btn btn-primary btn-lg me-3">
                         <i class="fa fa-save"></i> Save XP Settings
                     </button>
-                    <button type="button" class="btn btn-warning btn-lg" onclick="resetXPDefaults()">
-                        <i class="fa fa-refresh"></i> Reset to Defaults
-                    </button>
+                    <button type="submit" name="action" value="reset" class="btn btn-warning btn-lg" 
+                        onclick="return confirm('Are you sure you want to reset all settings to default values?')">
+                    <i class="fa fa-refresh"></i> Reset to Defaults
+                </button>   
                 </div>
             </form>
         </div>

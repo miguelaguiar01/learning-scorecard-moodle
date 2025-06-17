@@ -16,7 +16,15 @@ class xp_settings_manager {
         'badge_gold_xp' => 200,
         'badge_platinum_xp' => 500
     ];
-    
+
+     /**
+     * Get Default XP settings for a course
+     */
+    public static function get_default_course_settings($courseid) {
+        $settings = self::DEFAULT_SETTINGS;
+        return $settings;
+    }
+
     /**
      * Get XP settings for a course
      */
