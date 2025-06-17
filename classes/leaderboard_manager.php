@@ -4,12 +4,13 @@ namespace local_learning_scorecard;
 defined('MOODLE_INTERNAL') || die();
 
 class leaderboard_manager {
-    
-    // XP Configuration - easily modifiable for future development
-    const QUIZ_BASE_XP = 100;
-    const EXERCISE_BASE_XP = 50;
-    const FORUM_POST_XP = 10;
-    const GRADE_MULTIPLIER = 2;
+
+    /**
+     * Get XP configuration for a course
+     */
+    private static function get_xp_config($courseid) {
+        return \local_learning_scorecard\xp_settings_manager::get_course_settings($courseid);
+    }
     
     /**
      * Get overall leaderboard with all XP types
@@ -259,8 +260,9 @@ class leaderboard_manager {
         $avg_grade = $result && $result->avg_grade ? $result->avg_grade : 0;
         
         // XP Calculation: Base XP per quiz + grade bonus
-        $base_xp = $count * self::QUIZ_BASE_XP;
-        $grade_bonus = $avg_grade * self::GRADE_MULTIPLIER;
+        $config = self::get_xp_config($courseid);
+        $base_xp = $count * $config['quiz_base_xp'];
+        $grade_bonus = $avg_grade * $config['grade_multiplier'];
         $total_xp = $base_xp + $grade_bonus;
         
         return [
@@ -306,8 +308,9 @@ class leaderboard_manager {
         $avg_grade = $total_count > 0 ? (($assignment_grade * $assignment_count) + ($workshop_grade * $workshop_count)) / $total_count : 0;
         
         // XP Calculation: Base XP per exercise + grade bonus
-        $base_xp = $total_count * self::EXERCISE_BASE_XP;
-        $grade_bonus = $avg_grade * self::GRADE_MULTIPLIER;
+        $config = self::get_xp_config($courseid);
+        $base_xp = $assignment_count * $config['exercise_base_xp'];
+        $grade_bonus = $avg_grade * $config['grade_multiplier'];
         $total_xp = $base_xp + $grade_bonus;
         
         return [
@@ -333,7 +336,8 @@ class leaderboard_manager {
         $forum_result = $DB->get_record_sql($forum_sql, [$userid, $courseid]);
         $forum_posts = $forum_result ? $forum_result->count : 0;
         
-        $forum_xp = $forum_posts * self::FORUM_POST_XP;
+        $config = self::get_xp_config($courseid);
+        $forum_xp = $forum_posts * $config['forum_post_xp'];
         
         // Space for additional bonus XP calculations:
         // - Course completion bonuses
@@ -343,28 +347,6 @@ class leaderboard_manager {
         // - Streak bonuses
         
         return $forum_xp;
-    }
-    
-    /**
-     * Get XP configuration - for future admin interface
-     */
-    public static function get_xp_config() {
-        return [
-            'quiz_base_xp' => self::QUIZ_BASE_XP,
-            'exercise_base_xp' => self::EXERCISE_BASE_XP,
-            'forum_post_xp' => self::FORUM_POST_XP,
-            'grade_multiplier' => self::GRADE_MULTIPLIER
-        ];
-    }
-    
-    /**
-     * Set XP configuration - for future admin interface
-     */
-    // TODO Setup XP Config
-    public static function set_xp_config($config) {
-        // This would typically use Moodle's config storage
-        // For now, constants are used for simplicity
-        // Future: Store in mdl_config_plugins table
     }
 }
 ?>

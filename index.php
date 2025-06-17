@@ -1,6 +1,12 @@
 <?php
-require_once('../../config.php');
-require_once('lib.php');
+// Protect against admin scanning
+if (defined('CLI_SCRIPT') || 
+    (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/admin/') !== false)) {
+    return;
+}
+
+require_once(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/lib.php');
 
 $courseid = required_param('id', PARAM_INT);
 $tab = optional_param('tab', 'all', PARAM_ALPHA); // Default to 'all' tab
@@ -9,13 +15,18 @@ $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 require_login($course);
 $context = context_course::instance($courseid);
 
+// Check if user has access to this course (either enrolled or has course view capability)
+if (!is_enrolled($context) && !has_capability('moodle/course:view', $context)) {
+    throw new required_capability_exception($context, 'moodle/course:view', 'nopermissions', '');
+}
+
 $PAGE->set_url('/local/learning_scorecard/index.php', array('id' => $courseid, 'tab' => $tab));
 $PAGE->set_title(get_string('leaderboard', 'local_learning_scorecard'));
 $PAGE->set_heading($course->fullname);
 $PAGE->set_context($context);
 
 // Add CSS for seamless integration
-$PAGE->requires->css('/local/local_learning_scorecard/styles.css');
+$PAGE->requires->css('/local/learning_scorecard/styles.css');
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('leaderboard', 'local_learning_scorecard'));
