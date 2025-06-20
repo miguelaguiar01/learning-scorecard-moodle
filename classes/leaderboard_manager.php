@@ -277,46 +277,166 @@ class leaderboard_manager {
     private static function get_exercise_xp_data($userid, $courseid) {
         global $DB;
         
-        // Get assignments
-        $assignment_sql = "SELECT COUNT(*) as count, AVG(g.grade) as avg_grade
-                          FROM {assign_submission} s
-                          JOIN {assign} a ON s.assignment = a.id
-                          LEFT JOIN {assign_grades} g ON g.assignment = a.id AND g.userid = s.userid
-                          WHERE s.userid = ? AND a.course = ? AND s.status = 'submitted'";
+        // Get assignments where grades are released (visible in gradebook)
+        $assignment_sql = "SELECT 
+            a.id as assignment_id,
+            a.name,
+            a.grade as max_grade,
+            g.grade as user_grade,
+            gi.grademax,
+            gg.finalgrade,
+            gg.hidden,
+            gg.locked,
+            gg.overridden
+        FROM {assign} a
+        JOIN {assign_submission} s ON s.assignment = a.id
+        JOIN {assign_grades} g ON g.assignment = a.id AND g.userid = s.userid
+        JOIN {grade_items} gi ON gi.iteminstance = a.id 
+            AND gi.itemmodule = 'assign' 
+            AND gi.courseid = a.course
+            AND gi.itemtype = 'mod'
+        JOIN {grade_grades} gg ON gg.itemid = gi.id AND gg.userid = s.userid
+        WHERE 
+            s.userid = ? 
+            AND a.course = ? 
+            AND s.status = 'submitted'
+            AND s.latest = 1
+            AND g.grade IS NOT NULL 
+            AND g.grade >= 0
+            AND gg.finalgrade IS NOT NULL
+            AND gg.hidden = 0  -- Grade is not hidden from student
+            AND (gg.locked > 0 OR gg.overridden > 0 OR gg.finalgrade IS NOT NULL)"; // Grade is finalized
         
-        $assignment_result = $DB->get_record_sql($assignment_sql, [$userid, $courseid]);
+        $assignments = $DB->get_records_sql($assignment_sql, [$userid, $courseid]);
         
-        // Get workshop submissions (if workshop module exists)
-        $workshop_count = 0;
-        $workshop_grade = 0;
+        // Calculate assignment stats
+        $assignment_count = count($assignments);
+        $assignment_total_grade = 0;
         
-        if ($DB->get_manager()->table_exists('workshop')) {
-            $workshop_sql = "SELECT COUNT(*) as count, AVG(ws.grade) as avg_grade
-                            FROM {workshop_submissions} ws
-                            JOIN {workshop} w ON ws.workshopid = w.id
-                            WHERE ws.authorid = ? AND w.course = ?";
-            
-            $workshop_result = $DB->get_record_sql($workshop_sql, [$userid, $courseid]);
-            $workshop_count = $workshop_result ? $workshop_result->count : 0;
-            $workshop_grade = $workshop_result && $workshop_result->avg_grade ? $workshop_result->avg_grade : 0;
+        foreach ($assignments as $assignment) {
+            // Use finalgrade from gradebook (most reliable)
+            if ($assignment->grademax > 0) {
+                $grade_percent = ($assignment->finalgrade / $assignment->grademax) * 100;
+                $assignment_total_grade += $grade_percent;
+            }
         }
         
-        $assignment_count = $assignment_result ? $assignment_result->count : 0;
-        $assignment_grade = $assignment_result && $assignment_result->avg_grade ? $assignment_result->avg_grade : 0;
+        $assignment_avg_grade = $assignment_count > 0 ? $assignment_total_grade / $assignment_count : 0;
         
+        // Get workshop submissions where grades are released
+        $workshop_count = 0;
+        $workshop_avg_grade = 0;
+        
+        if ($DB->get_manager()->table_exists('workshop_submissions')) {
+            $workshop_sql = "SELECT 
+                ws.id,
+                w.name,
+                w.grade as max_grade,
+                ws.grade as user_grade,
+                gi.grademax,
+                gg.finalgrade,
+                gg.hidden
+            FROM {workshop_submissions} ws
+            JOIN {workshop} w ON ws.workshopid = w.id
+            JOIN {grade_items} gi ON gi.iteminstance = w.id 
+                AND gi.itemmodule = 'workshop' 
+                AND gi.courseid = w.course
+                AND gi.itemtype = 'mod'
+            JOIN {grade_grades} gg ON gg.itemid = gi.id AND gg.userid = ws.authorid
+            WHERE 
+                ws.authorid = ? 
+                AND w.course = ?
+                AND ws.grade IS NOT NULL
+                AND ws.grade >= 0
+                AND gg.finalgrade IS NOT NULL
+                AND gg.hidden = 0  -- Grade is not hidden from student
+                AND ws.published = 1"; // Workshop submission is published
+            
+            $workshops = $DB->get_records_sql($workshop_sql, [$userid, $courseid]);
+            
+            $workshop_count = count($workshops);
+            $workshop_total_grade = 0;
+            
+            foreach ($workshops as $workshop) {
+                if ($workshop->grademax > 0) {
+                    $grade_percent = ($workshop->finalgrade / $workshop->grademax) * 100;
+                    $workshop_total_grade += $grade_percent;
+                }
+            }
+            
+            $workshop_avg_grade = $workshop_count > 0 ? $workshop_total_grade / $workshop_count : 0;
+        }
+        
+        // Calculate totals
         $total_count = $assignment_count + $workshop_count;
-        $avg_grade = $total_count > 0 ? (($assignment_grade * $assignment_count) + ($workshop_grade * $workshop_count)) / $total_count : 0;
         
-        // XP Calculation: Base XP per exercise + grade bonus
+        if ($total_count == 0) {
+            // No released grades yet
+            return [
+                'count' => 0,
+                'xp' => 0,
+                'pending' => self::get_pending_submissions_count($userid, $courseid)
+            ];
+        }
+        
+        // Calculate weighted average grade
+        $total_avg_grade = (($assignment_avg_grade * $assignment_count) + 
+                           ($workshop_avg_grade * $workshop_count)) / $total_count;
+        
+        // XP Calculation
         $config = self::get_xp_config($courseid);
-        $base_xp = $assignment_count * $config['exercise_base_xp'];
-        $grade_bonus = $avg_grade * $config['grade_multiplier'];
+        
+        // Base XP for each graded exercise
+        $base_xp = $total_count * $config['exercise_base_xp'];
+        
+        // Grade bonus based on performance
+        $grade_bonus = ($total_avg_grade / 100) * $config['grade_multiplier'] * $total_count;
+        
         $total_xp = $base_xp + $grade_bonus;
+        
+        // Debug logging
+        if (debugging()) {
+            mtrace("Exercise XP Calculation for user $userid in course $courseid:");
+            mtrace("- Graded assignments: $assignment_count (avg: " . round($assignment_avg_grade, 2) . "%)");
+            mtrace("- Graded workshops: $workshop_count (avg: " . round($workshop_avg_grade, 2) . "%)");
+            mtrace("- Base XP: $base_xp, Grade bonus: " . round($grade_bonus, 2));
+            mtrace("- Total XP: " . round($total_xp));
+        }
         
         return [
             'count' => $total_count,
-            'xp' => round($total_xp)
+            'xp' => round($total_xp),
+            'avg_grade' => round($total_avg_grade, 2),
+            'details' => [
+                'assignments' => $assignment_count,
+                'workshops' => $workshop_count,
+                'assignment_avg' => round($assignment_avg_grade, 2),
+                'workshop_avg' => round($workshop_avg_grade, 2)
+            ]
         ];
+    }
+    
+    /**
+     * Helper function to get count of pending (ungraded) submissions
+     */
+    private static function get_pending_submissions_count($userid, $courseid) {
+        global $DB;
+        
+        // Count submitted but not yet graded assignments
+        $pending_sql = "SELECT COUNT(DISTINCT a.id) as count
+                       FROM {assign} a
+                       JOIN {assign_submission} s ON s.assignment = a.id
+                       LEFT JOIN {assign_grades} g ON g.assignment = a.id AND g.userid = s.userid
+                       WHERE 
+                           s.userid = ? 
+                           AND a.course = ? 
+                           AND s.status = 'submitted'
+                           AND s.latest = 1
+                           AND (g.grade IS NULL OR g.grade < 0)";
+        
+        $result = $DB->get_record_sql($pending_sql, [$userid, $courseid]);
+        
+        return $result ? $result->count : 0;
     }
     
     /**
