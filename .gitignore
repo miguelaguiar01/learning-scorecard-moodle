@@ -2,12 +2,7 @@
 
 
 #LATEX
-docs/LS_THESIS/*.fdb_latexmk
-docs/LS_THESIS/*.fls
-docs/LS_THESIS/*.log
-docs/LS_THESIS/*.aux
-docs/LS_THESIS/*.synctex.gz
-docs/LS_THESIS/*.toc
+docs/LS_THESIS/build/*
 docs/LS_THESIS/*.pdf
 
 docs/References/*
