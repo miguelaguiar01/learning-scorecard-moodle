@@ -27,7 +27,7 @@ $PAGE->set_heading($course->fullname);
 $PAGE->set_context($context);
 
 // Add CSS for seamless integration
-$PAGE->requires->css('/local/learning_scorecard/styles.css');
+$PAGE->requires->css('/local/learning_scorecard/styles/styles.css');
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('leaderboard', 'local_learning_scorecard'));

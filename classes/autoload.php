@@ -21,4 +21,8 @@ require_once(__DIR__ . '/helpers/grade_processor.php');
 
 // Load all controller classes
 require_once(__DIR__ . '/controllers/leaderboard_controller.php');
+
+// Load all view classes
+require_once(__DIR__ . '/views/leaderboard_renderer.php');
+require_once(__DIR__ . '/views/settings_renderer.php');
 ?>

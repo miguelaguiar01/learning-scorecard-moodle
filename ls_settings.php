@@ -15,6 +15,10 @@ $PAGE->set_title('Learning Scorecard Settings');
 $PAGE->set_heading($course->fullname);
 $PAGE->set_context($context);
 
+// Add CSS for settings page
+$PAGE->requires->css('/local/learning_scorecard/styles/styles.css');
+$PAGE->requires->css('/local/learning_scorecard/styles/settings.css');
+
 // HANDLE ALL FORM PROCESSING HERE - BEFORE ANY OUTPUT
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && confirm_sesskey()) {
     
