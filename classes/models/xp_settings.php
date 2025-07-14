@@ -1,9 +1,9 @@
 <?php
-namespace local_learning_scorecard;
+namespace local_learning_scorecard\models;
 
 defined('MOODLE_INTERNAL') || die();
 
-class xp_settings_manager {
+class xp_settings {
     
     // Default XP values
     const DEFAULT_SETTINGS = [

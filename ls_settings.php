@@ -1,6 +1,7 @@
 <?php
 require_once('../../config.php');
 require_once('lib.php');
+require_once(__DIR__ . '/classes/autoload.php');
 
 $courseid = required_param('id', PARAM_INT);
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
@@ -17,10 +18,10 @@ $PAGE->set_context($context);
 // HANDLE ALL FORM PROCESSING HERE - BEFORE ANY OUTPUT
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && confirm_sesskey()) {
     
-    // Handle reset action
+// Handle reset action
     if (isset($_POST['action']) && $_POST['action'] === 'reset') {
-        $default_settings = \local_learning_scorecard\xp_settings_manager::get_course_settings(0);
-        \local_learning_scorecard\xp_settings_manager::save_course_settings($courseid, $default_settings);
+        $default_settings = \local_learning_scorecard\models\xp_settings::get_course_settings(0);
+        \local_learning_scorecard\models\xp_settings::save_course_settings($courseid, $default_settings);
         redirect($PAGE->url, 'Settings reset to defaults!', 2, \core\output\notification::NOTIFY_SUCCESS);
     }
     
@@ -37,13 +38,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && confirm_sesskey()) {
             'badge_platinum_xp' => required_param('badge_platinum_xp', PARAM_INT)
         );
         
-        \local_learning_scorecard\xp_settings_manager::save_course_settings($courseid, $settings);
+        \local_learning_scorecard\models\xp_settings::save_course_settings($courseid, $settings);
         redirect($PAGE->url, 'XP Settings saved successfully!', 2, \core\output\notification::NOTIFY_SUCCESS);
     }
 }
 
 // Get current settings (this will be the updated settings after save/reset)
-$current_xp_settings = \local_learning_scorecard\xp_settings_manager::get_course_settings($courseid);
+$current_xp_settings = \local_learning_scorecard\models\xp_settings::get_course_settings($courseid);
 
 // NOW START THE PAGE OUTPUT
 echo $OUTPUT->header();

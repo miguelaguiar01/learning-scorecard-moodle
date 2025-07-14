@@ -1,54 +1,81 @@
 {
-    "latex-workshop.latex.outDir": "%DIR%/build",
-    "latex-workshop.latex.tools": [
-        {
-            "name": "latexmk",
-            "command": "latexmk",
-            "args": [
-                "-synctex=1",
-                "-interaction=nonstopmode",
-                "-file-line-error",
-                "-pdf",
-                "-outdir=%OUTDIR%",
-                "%DOC%"
-            ],
-            "env": {}
-        },
-        {
-            "name": "copy_pdf",
-            "command": "cp",
-            "args": [
-                "%OUTDIR%/%DOCFILE%.pdf",
-                "%DIR%/%DOCFILE%.pdf"
-            ]
-        },
-        {
-            "name": "remove_pdf_from_build",
-            "command": "rm",
-            "args": [
-                "%OUTDIR%/%DOCFILE%.pdf"
-            ]
-        },
-        {
-            "name": "remove_synctex_from_build",
-            "command": "rm",
-            "args": [
-                "-f",
-                "%OUTDIR%/%DOCFILE%.synctex.gz"
-            ]
-        }
-    ],
-    "latex-workshop.latex.recipes": [
-        {
-            "name": "latexmk_and_copy",
-            "tools": [
-                "latexmk",
-                "copy_pdf",
-                "remove_pdf_from_build",
-                "remove_synctex_from_build"
-            ]
-        }
-    ],
-    "latex-workshop.latex.clean.subfolder.enabled": true,
-    "latex-workshop.latex.autoClean.run": "onBuilt"
+  "latex-workshop.latex.outDir": "%DIR%/build",
+  "latex-workshop.latex.tools": [
+    {
+      "name": "latexmk",
+      "command": "latexmk",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "-pdf",
+        "-outdir=%OUTDIR%",
+        "%DOC%"
+      ],
+      "env": {}
+    },
+    {
+      "name": "copy_pdf_windows",
+      "command": "powershell",
+      "args": [
+        "-Command",
+        "Copy-Item '%OUTDIR%/%DOCFILE%.pdf' '%DIR%/%DOCFILE%.pdf' -Force"
+      ]
+    },
+    {
+      "name": "copy_pdf_unix",
+      "command": "cp",
+      "args": ["%OUTDIR%/%DOCFILE%.pdf", "%DIR%/%DOCFILE%.pdf"]
+    },
+    {
+      "name": "remove_pdf_from_build_windows",
+      "command": "powershell",
+      "args": [
+        "-Command",
+        "Remove-Item '%OUTDIR%/%DOCFILE%.pdf' -Force -ErrorAction SilentlyContinue"
+      ]
+    },
+    {
+      "name": "remove_pdf_from_build_unix",
+      "command": "rm",
+      "args": ["-f", "%OUTDIR%/%DOCFILE%.pdf"]
+    },
+    {
+      "name": "remove_synctex_from_build_windows",
+      "command": "powershell",
+      "args": [
+        "-Command",
+        "Remove-Item '%OUTDIR%/%DOCFILE%.synctex.gz' -Force -ErrorAction SilentlyContinue"
+      ]
+    },
+    {
+      "name": "remove_synctex_from_build_unix",
+      "command": "rm",
+      "args": ["-f", "%OUTDIR%/%DOCFILE%.synctex.gz"]
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "latexmk_and_copy_windows",
+      "tools": [
+        "latexmk",
+        "copy_pdf_windows",
+        "remove_pdf_from_build_windows",
+        "remove_synctex_from_build_windows"
+      ]
+    },
+    {
+      "name": "latexmk_and_copy_unix",
+      "tools": [
+        "latexmk",
+        "copy_pdf_unix",
+        "remove_pdf_from_build_unix",
+        "remove_synctex_from_build_unix"
+      ]
+    }
+  ],
+  "latex-workshop.latex.clean.subfolder.enabled": true,
+  "latex-workshop.latex.autoClean.run": "onBuilt",
+  "latex-workshop.linting.chktex.exec.path": "C:/Users/User/scoop/apps/latex/current/texmfs/install/miktex/bin/x64/chktex.exe",
+  "latex-workshop.linting.chktex.enabled": true
 }

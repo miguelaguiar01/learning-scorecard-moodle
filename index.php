@@ -7,6 +7,7 @@ if (defined('CLI_SCRIPT') ||
 
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
+require_once(__DIR__ . '/classes/autoload.php');
 
 $courseid = required_param('id', PARAM_INT);
 $tab = optional_param('tab', 'all', PARAM_ALPHA); // Default to 'all' tab
@@ -55,7 +56,7 @@ print_tabs($tabrows, $tab);
 // Get leaderboard data based on selected tab
 switch ($tab) {
     case 'quizzes':
-        $leaderboard = \local_learning_scorecard\leaderboard_manager::get_quiz_leaderboard($courseid);
+        $leaderboard = \local_learning_scorecard\controllers\leaderboard_controller::get_quiz_leaderboard($courseid);
         $columns = array(
             'rank' => get_string('rank', 'local_learning_scorecard'),
             'student' => get_string('student', 'local_learning_scorecard'),
@@ -65,7 +66,7 @@ switch ($tab) {
         break;
     
     case 'exercises':
-        $leaderboard = \local_learning_scorecard\leaderboard_manager::get_exercise_leaderboard($courseid);
+        $leaderboard = \local_learning_scorecard\controllers\leaderboard_controller::get_exercise_leaderboard($courseid);
         $columns = array(
             'rank' => get_string('rank', 'local_learning_scorecard'),
             'student' => get_string('student', 'local_learning_scorecard'),
@@ -75,7 +76,7 @@ switch ($tab) {
         break;
 
     case 'guilds':
-        $leaderboard = \local_learning_scorecard\leaderboard_manager::get_guild_leaderboard($courseid);
+        $leaderboard = \local_learning_scorecard\controllers\leaderboard_controller::get_guild_leaderboard($courseid);
         $columns = array(
             'rank' => get_string('rank', 'local_learning_scorecard'),
             'guild_name' => get_string('guild_name', 'local_learning_scorecard'),
@@ -86,7 +87,7 @@ switch ($tab) {
         break;
 
     case 'combined':
-        $leaderboard = \local_learning_scorecard\leaderboard_manager::get_combined_leaderboard($courseid);
+        $leaderboard = \local_learning_scorecard\controllers\leaderboard_controller::get_combined_leaderboard($courseid);
         $columns = array(
             'rank' => get_string('rank', 'local_learning_scorecard'),
             'student' => get_string('student', 'local_learning_scorecard'),
@@ -98,7 +99,7 @@ switch ($tab) {
 
     case 'all':
     default:
-        $leaderboard = \local_learning_scorecard\leaderboard_manager::get_all_leaderboard($courseid);
+        $leaderboard = \local_learning_scorecard\controllers\leaderboard_controller::get_all_leaderboard($courseid);
         $columns = array(
             'rank' => get_string('rank', 'local_learning_scorecard'),
             'student' => get_string('student', 'local_learning_scorecard'),
