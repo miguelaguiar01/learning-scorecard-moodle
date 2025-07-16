@@ -1,4 +1,5 @@
 <?php
+global $PAGE, $DB, $OUTPUT;
 require_once('../../config.php');
 require_once('lib.php');
 require_once(__DIR__ . '/classes/autoload.php');
@@ -21,14 +22,14 @@ $PAGE->requires->css('/local/learning_scorecard/styles/settings.css');
 
 // HANDLE ALL FORM PROCESSING HERE - BEFORE ANY OUTPUT
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && confirm_sesskey()) {
-    
+
 // Handle reset action
     if (isset($_POST['action']) && $_POST['action'] === 'reset') {
         $default_settings = \local_learning_scorecard\models\xp_settings::get_course_settings(0);
         \local_learning_scorecard\models\xp_settings::save_course_settings($courseid, $default_settings);
         redirect($PAGE->url, 'Settings reset to defaults!', 2, \core\output\notification::NOTIFY_SUCCESS);
     }
-    
+
     // Handle XP Settings save
     if (isset($_POST['section']) && $_POST['section'] === 'xp_settings') {
         $settings = array(
@@ -41,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && confirm_sesskey()) {
             'badge_gold_xp' => required_param('badge_gold_xp', PARAM_INT),
             'badge_platinum_xp' => required_param('badge_platinum_xp', PARAM_INT)
         );
-        
+
         \local_learning_scorecard\models\xp_settings::save_course_settings($courseid, $settings);
         redirect($PAGE->url, 'XP Settings saved successfully!', 2, \core\output\notification::NOTIFY_SUCCESS);
     }
@@ -63,165 +64,178 @@ echo '</ol>';
 echo '</nav>';
 
 echo $OUTPUT->heading('Learning Scorecard Settings');
-    
-    // Space for future settings sections:
-    // - Badge Settings
-    // - Leaderboard Display Settings  
-    // - Notification Settings
-    // - Competition Settings
+
+// Space for future settings sections:
+// - Badge Settings
+// - Leaderboard Display Settings
+// - Notification Settings
+// - Competition Settings
 
 ?>
 
-<div class="container-fluid">
-    
-    <!-- XP Settings Section -->
-    <div class="card mb-4">
-        <div class="card-header bg-primary text-white">
-            <h3 class="mb-0"><i class="fa fa-star"></i> Experience Points (XP) Settings</h3>
-            <small>Configure how students earn experience points in your course</small>
-        </div>
-        <div class="card-body">
-            
-            <form method="post" id="xp-settings-form">
-                <input type="hidden" name="sesskey" value="<?php echo sesskey(); ?>">
-                <input type="hidden" name="section" value="xp_settings">
-                
-                <div class="row">
-                    <!-- Base XP Values -->
-                    <div class="col-md-6">
-                        <h5 class="text-primary mb-3">📚 Activity Base XP</h5>
-                        
-                        <div class="form-group mb-3">
-                            <label for="quiz_base_xp" class="form-label fw-bold">Quiz Base XP</label>
-                            <input type="number" class="form-control" name="quiz_base_xp" id="quiz_base_xp" 
-                                   value="<?php echo $current_xp_settings['quiz_base_xp']; ?>" min="1" max="1000" required>
-                            <small class="form-text text-muted">XP awarded for completing each quiz</small>
+    <div class="container-fluid">
+
+        <!-- XP Settings Section -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0"><i class="fa fa-star"></i> Experience Points (XP) Settings</h3>
+                <small>Configure how students earn experience points in your course</small>
+            </div>
+            <div class="card-body">
+
+                <form method="post" id="xp-settings-form">
+                    <input type="hidden" name="sesskey" value="<?php echo sesskey(); ?>">
+                    <input type="hidden" name="section" value="xp_settings">
+
+                    <div class="row">
+                        <!-- Base XP Values -->
+                        <div class="col-md-6">
+                            <h5 class="text-primary mb-3">📚 Activity Base XP</h5>
+
+                            <div class="form-group mb-3">
+                                <label for="quiz_base_xp" class="form-label fw-bold">Quiz Base XP</label>
+                                <input type="number" class="form-control" name="quiz_base_xp" id="quiz_base_xp"
+                                       value="<?php echo $current_xp_settings['quiz_base_xp']; ?>" min="1" max="1000"
+                                       required>
+                                <small class="form-text text-muted">XP awarded for completing each quiz</small>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="exercise_base_xp" class="form-label fw-bold">Exercise Base XP</label>
+                                <input type="number" class="form-control" name="exercise_base_xp" id="exercise_base_xp"
+                                       value="<?php echo $current_xp_settings['exercise_base_xp']; ?>" min="1"
+                                       max="1000" required>
+                                <small class="form-text text-muted">XP awarded for completing assignments and
+                                    exercises</small>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="forum_post_xp" class="form-label fw-bold">Forum Post XP</label>
+                                <input type="number" class="form-control" name="forum_post_xp" id="forum_post_xp"
+                                       value="<?php echo $current_xp_settings['forum_post_xp']; ?>" min="1" max="1000"
+                                       required>
+                                <small class="form-text text-muted">XP awarded for each forum post or reply</small>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="grade_multiplier" class="form-label fw-bold">Grade Multiplier</label>
+                                <input type="number" class="form-control" name="grade_multiplier" id="grade_multiplier"
+                                       value="<?php echo $current_xp_settings['grade_multiplier']; ?>" min="0.1"
+                                       max="10" step="0.1" required>
+                                <small class="form-text text-muted">Multiplier applied to grades for bonus XP (higher
+                                    grades = more XP)</small>
+                            </div>
                         </div>
 
-                        <div class="form-group mb-3">
-                            <label for="exercise_base_xp" class="form-label fw-bold">Exercise Base XP</label>
-                            <input type="number" class="form-control" name="exercise_base_xp" id="exercise_base_xp" 
-                                   value="<?php echo $current_xp_settings['exercise_base_xp']; ?>" min="1" max="1000" required>
-                            <small class="form-text text-muted">XP awarded for completing assignments and exercises</small>
-                        </div>
+                        <!-- Badge XP Values -->
+                        <div class="col-md-6">
+                            <h5 class="text-warning mb-3">🏆 Badge XP Rewards</h5>
 
-                        <div class="form-group mb-3">
-                            <label for="forum_post_xp" class="form-label fw-bold">Forum Post XP</label>
-                            <input type="number" class="form-control" name="forum_post_xp" id="forum_post_xp" 
-                                   value="<?php echo $current_xp_settings['forum_post_xp']; ?>" min="1" max="1000" required>
-                            <small class="form-text text-muted">XP awarded for each forum post or reply</small>
-                        </div>
+                            <div class="form-group mb-3">
+                                <label for="badge_bronze_xp" class="form-label fw-bold">🥉 Bronze Badge XP</label>
+                                <input type="number" class="form-control" name="badge_bronze_xp" id="badge_bronze_xp"
+                                       value="<?php echo $current_xp_settings['badge_bronze_xp']; ?>" min="1" max="1000"
+                                       required>
+                            </div>
 
-                        <div class="form-group mb-3">
-                            <label for="grade_multiplier" class="form-label fw-bold">Grade Multiplier</label>
-                            <input type="number" class="form-control" name="grade_multiplier" id="grade_multiplier" 
-                                   value="<?php echo $current_xp_settings['grade_multiplier']; ?>" min="0.1" max="10" step="0.1" required>
-                            <small class="form-text text-muted">Multiplier applied to grades for bonus XP (higher grades = more XP)</small>
+                            <div class="form-group mb-3">
+                                <label for="badge_silver_xp" class="form-label fw-bold">🥈 Silver Badge XP</label>
+                                <input type="number" class="form-control" name="badge_silver_xp" id="badge_silver_xp"
+                                       value="<?php echo $current_xp_settings['badge_silver_xp']; ?>" min="1" max="1000"
+                                       required>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="badge_gold_xp" class="form-label fw-bold">🥇 Gold Badge XP</label>
+                                <input type="number" class="form-control" name="badge_gold_xp" id="badge_gold_xp"
+                                       value="<?php echo $current_xp_settings['badge_gold_xp']; ?>" min="1" max="1000"
+                                       required>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="badge_platinum_xp" class="form-label fw-bold">🏆 Platinum Badge XP</label>
+                                <input type="number" class="form-control" name="badge_platinum_xp"
+                                       id="badge_platinum_xp"
+                                       value="<?php echo $current_xp_settings['badge_platinum_xp']; ?>" min="1"
+                                       max="2000" required>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Badge XP Values -->
-                    <div class="col-md-6">
-                        <h5 class="text-warning mb-3">🏆 Badge XP Rewards</h5>
-                        
-                        <div class="form-group mb-3">
-                            <label for="badge_bronze_xp" class="form-label fw-bold">🥉 Bronze Badge XP</label>
-                            <input type="number" class="form-control" name="badge_bronze_xp" id="badge_bronze_xp" 
-                                   value="<?php echo $current_xp_settings['badge_bronze_xp']; ?>" min="1" max="1000" required>
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="badge_silver_xp" class="form-label fw-bold">🥈 Silver Badge XP</label>
-                            <input type="number" class="form-control" name="badge_silver_xp" id="badge_silver_xp" 
-                                   value="<?php echo $current_xp_settings['badge_silver_xp']; ?>" min="1" max="1000" required>
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="badge_gold_xp" class="form-label fw-bold">🥇 Gold Badge XP</label>
-                            <input type="number" class="form-control" name="badge_gold_xp" id="badge_gold_xp" 
-                                   value="<?php echo $current_xp_settings['badge_gold_xp']; ?>" min="1" max="1000" required>
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="badge_platinum_xp" class="form-label fw-bold">🏆 Platinum Badge XP</label>
-                            <input type="number" class="form-control" name="badge_platinum_xp" id="badge_platinum_xp" 
-                                   value="<?php echo $current_xp_settings['badge_platinum_xp']; ?>" min="1" max="2000" required>
-                        </div>
+                    <!-- Action buttons for XP Settings -->
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg me-3">
+                            <i class="fa fa-save"></i> Save XP Settings
+                        </button>
+                        <button type="submit" name="action" value="reset" class="btn btn-warning btn-lg"
+                                onclick="return confirm('Are you sure you want to reset all settings to default values?')">
+                            <i class="fa fa-refresh"></i> Reset to Defaults
+                        </button>
                     </div>
-                </div>
+                </form>
+            </div>
+        </div>
 
-                <!-- Action buttons for XP Settings -->
-                <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-primary btn-lg me-3">
-                        <i class="fa fa-save"></i> Save XP Settings
-                    </button>
-                    <button type="submit" name="action" value="reset" class="btn btn-warning btn-lg" 
-                        onclick="return confirm('Are you sure you want to reset all settings to default values?')">
-                    <i class="fa fa-refresh"></i> Reset to Defaults
-                </button>   
-                </div>
-            </form>
+        <!-- Space for Future Settings Sections -->
+
+        <!-- Badge Management Section (Future) -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h3 class="mb-0"><i class="fa fa-trophy"></i> Badge Management <span class="badge bg-warning text-dark">Coming Soon</span>
+                </h3>
+                <small>Configure badge requirements and unlock conditions</small>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">This section will allow you to:</p>
+                <ul class="text-muted">
+                    <li>Enable/disable specific badges</li>
+                    <li>Customize badge requirements</li>
+                    <li>Set badge unlock conditions</li>
+                    <li>Manage badge icons and descriptions</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Leaderboard Display Section (Future) -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h3 class="mb-0"><i class="fa fa-chart-line"></i> Leaderboard Display <span
+                            class="badge bg-warning text-dark">Coming Soon</span></h3>
+                <small>Customize how leaderboards are displayed to students</small>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">This section will allow you to:</p>
+                <ul class="text-muted">
+                    <li>Show/hide specific leaderboard tabs</li>
+                    <li>Customize leaderboard refresh frequency</li>
+                    <li>Set privacy options (anonymous mode)</li>
+                    <li>Configure point display format</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="text-center mt-4">
+            <a href="<?php echo $leaderboard_url; ?>" class="btn btn-secondary btn-lg">
+                <i class="fa fa-arrow-left"></i> Back to Leaderboard
+            </a>
         </div>
     </div>
 
-    <!-- Space for Future Settings Sections -->
-    
-    <!-- Badge Management Section (Future) -->
-    <div class="card mb-4">
-        <div class="card-header bg-success text-white">
-            <h3 class="mb-0"><i class="fa fa-trophy"></i> Badge Management <span class="badge bg-warning text-dark">Coming Soon</span></h3>
-            <small>Configure badge requirements and unlock conditions</small>
-        </div>
-        <div class="card-body">
-            <p class="text-muted">This section will allow you to:</p>
-            <ul class="text-muted">
-                <li>Enable/disable specific badges</li>
-                <li>Customize badge requirements</li>
-                <li>Set badge unlock conditions</li>
-                <li>Manage badge icons and descriptions</li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- Leaderboard Display Section (Future) -->
-    <div class="card mb-4">
-        <div class="card-header bg-info text-white">
-            <h3 class="mb-0"><i class="fa fa-chart-line"></i> Leaderboard Display <span class="badge bg-warning text-dark">Coming Soon</span></h3>
-            <small>Customize how leaderboards are displayed to students</small>
-        </div>
-        <div class="card-body">
-            <p class="text-muted">This section will allow you to:</p>
-            <ul class="text-muted">
-                <li>Show/hide specific leaderboard tabs</li>
-                <li>Customize leaderboard refresh frequency</li>
-                <li>Set privacy options (anonymous mode)</li>
-                <li>Configure point display format</li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- Navigation -->
-    <div class="text-center mt-4">
-        <a href="<?php echo $leaderboard_url; ?>" class="btn btn-secondary btn-lg">
-            <i class="fa fa-arrow-left"></i> Back to Leaderboard
-        </a>
-    </div>
-</div>
-
-<script>
-function resetXPDefaults() {
-    if (confirm('Are you sure you want to reset all XP settings to default values?')) {
-        document.getElementById('quiz_base_xp').value = 100;
-        document.getElementById('exercise_base_xp').value = 50;
-        document.getElementById('forum_post_xp').value = 10;
-        document.getElementById('grade_multiplier').value = 2.0;
-        document.getElementById('badge_bronze_xp').value = 50;
-        document.getElementById('badge_silver_xp').value = 100;
-        document.getElementById('badge_gold_xp').value = 200;
-        document.getElementById('badge_platinum_xp').value = 500;
-    }
-}
-</script>
+    <script>
+        function resetXPDefaults() {
+            if (confirm('Are you sure you want to reset all XP settings to default values?')) {
+                document.getElementById('quiz_base_xp').value = 100;
+                document.getElementById('exercise_base_xp').value = 50;
+                document.getElementById('forum_post_xp').value = 10;
+                document.getElementById('grade_multiplier').value = 2.0;
+                document.getElementById('badge_bronze_xp').value = 50;
+                document.getElementById('badge_silver_xp').value = 100;
+                document.getElementById('badge_gold_xp').value = 200;
+                document.getElementById('badge_platinum_xp').value = 500;
+            }
+        }
+    </script>
 
 <?php
 echo $OUTPUT->footer();

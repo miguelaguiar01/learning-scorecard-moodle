@@ -1,4 +1,5 @@
 <?php
+
 namespace local_learning_scorecard\views;
 
 use html_writer;
@@ -6,8 +7,9 @@ use moodle_url;
 
 defined('MOODLE_INTERNAL') || die();
 
-class settings_renderer {
-    
+class settings_renderer
+{
+
     const XP_SETTINGS_FIELDS = [
         'base_xp' => [
             'title' => '📚 Activity Base XP',
@@ -73,80 +75,84 @@ class settings_renderer {
             ]
         ]
     ];
-    
-    public function render_settings_page($courseid, $current_settings) {
-        $output = '';
-        
-        $output .= $this->render_breadcrumb($courseid);
+
+    public function render_settings_page($courseid, $current_settings)
+    {
+
+        $output = $this->render_breadcrumb($courseid);
         $output .= $this->render_main_container($courseid, $current_settings);
-        
+
         return $output;
     }
-    
-    private function render_breadcrumb($courseid) {
+
+    private function render_breadcrumb($courseid)
+    {
         $leaderboard_url = new moodle_url('/local/learning_scorecard/index.php', ['id' => $courseid]);
-        
+
         $output = html_writer::start_tag('nav', ['aria-label' => 'breadcrumb']);
         $output .= html_writer::start_tag('ol', ['class' => 'breadcrumb']);
-        $output .= html_writer::tag('li', 
+        $output .= html_writer::tag('li',
             html_writer::link($leaderboard_url, 'Leaderboard'),
             ['class' => 'breadcrumb-item']
         );
-        $output .= html_writer::tag('li', 
+        $output .= html_writer::tag('li',
             'Learning Scorecard Settings',
             ['class' => 'breadcrumb-item active', 'aria-current' => 'page']
         );
         $output .= html_writer::end_tag('ol');
         $output .= html_writer::end_tag('nav');
-        
+
         return $output;
     }
-    
-    private function render_main_container($courseid, $current_settings) {
+
+    private function render_main_container($courseid, $current_settings)
+    {
         $output = html_writer::start_div('container-fluid');
-        
+
         // XP Settings Section
         $output .= $this->render_xp_settings_card($courseid, $current_settings);
-        
+
         // Future settings sections
         $output .= $this->render_future_sections();
-        
+
         // Navigation
         $output .= $this->render_navigation($courseid);
-        
+
         $output .= html_writer::end_div();
-        
+
         return $output;
     }
-    
-    private function render_xp_settings_card($courseid, $current_settings) {
+
+    private function render_xp_settings_card($courseid, $current_settings)
+    {
         $output = html_writer::start_div('card mb-4');
-        
+
         // Card header
         $output .= html_writer::start_div('card-header bg-primary text-white');
-        $output .= html_writer::tag('h3', 
+        $output .= html_writer::tag('h3',
             '<i class="fa fa-star"></i> Experience Points (XP) Settings',
             ['class' => 'mb-0']
         );
         $output .= html_writer::tag('small', 'Configure how students earn experience points in your course');
         $output .= html_writer::end_div();
-        
+
         // Card body
         $output .= html_writer::start_div('card-body');
         $output .= $this->render_xp_settings_form($courseid, $current_settings);
         $output .= html_writer::end_div();
-        
+
         $output .= html_writer::end_div();
-        
+
         return $output;
     }
-    
-    private function render_xp_settings_form($courseid, $current_settings) {
+
+    private function render_xp_settings_form($courseid, $current_settings)
+    {
         $output = html_writer::start_tag('form', [
             'method' => 'post',
             'id' => 'xp-settings-form'
         ]);
-        
+
         // Hidden fields
         $output .= html_writer::empty_tag('input', [
             'type' => 'hidden',
@@ -158,40 +164,41 @@ class settings_renderer {
             'name' => 'section',
             'value' => 'xp_settings'
         ]);
-        
+
         // Form fields
         $output .= html_writer::start_div('row');
-        
+
         foreach (self::XP_SETTINGS_FIELDS as $section_key => $section) {
             $output .= html_writer::start_div('col-md-6');
             $output .= html_writer::tag('h5', $section['title'], ['class' => 'text-primary mb-3']);
-            
+
             foreach ($section['fields'] as $field_key => $field) {
                 $output .= $this->render_form_field($field_key, $field, $current_settings);
             }
-            
+
             $output .= html_writer::end_div();
         }
-        
+
         $output .= html_writer::end_div();
-        
+
         // Action buttons
         $output .= $this->render_action_buttons();
-        
+
         $output .= html_writer::end_tag('form');
-        
+
         return $output;
     }
-    
-    private function render_form_field($field_key, $field_config, $current_settings) {
+
+    private function render_form_field($field_key, $field_config, $current_settings)
+    {
         $output = html_writer::start_div('form-group mb-3');
-        
+
         // Label
         $output .= html_writer::tag('label', $field_config['label'], [
             'for' => $field_key,
             'class' => 'form-label fw-bold'
         ]);
-        
+
         // Input field
         $input_attributes = [
             'type' => $field_config['type'],
@@ -201,7 +208,7 @@ class settings_renderer {
             'value' => $current_settings[$field_key],
             'required' => true
         ];
-        
+
         // Add field-specific attributes
         if (isset($field_config['min'])) {
             $input_attributes['min'] = $field_config['min'];
@@ -212,35 +219,36 @@ class settings_renderer {
         if (isset($field_config['step'])) {
             $input_attributes['step'] = $field_config['step'];
         }
-        
+
         $output .= html_writer::empty_tag('input', $input_attributes);
-        
+
         // Help text
         if (isset($field_config['help'])) {
             $output .= html_writer::tag('small', $field_config['help'], [
                 'class' => 'form-text text-muted'
             ]);
         }
-        
+
         $output .= html_writer::end_div();
-        
+
         return $output;
     }
-    
-    private function render_action_buttons() {
+
+    private function render_action_buttons()
+    {
         $output = html_writer::start_div('text-center mt-4');
-        
+
         // Save button
-        $output .= html_writer::tag('button', 
+        $output .= html_writer::tag('button',
             '<i class="fa fa-save"></i> Save XP Settings',
             [
                 'type' => 'submit',
                 'class' => 'btn btn-primary btn-lg me-3'
             ]
         );
-        
+
         // Reset button
-        $output .= html_writer::tag('button', 
+        $output .= html_writer::tag('button',
             '<i class="fa fa-refresh"></i> Reset to Defaults',
             [
                 'type' => 'submit',
@@ -250,15 +258,16 @@ class settings_renderer {
                 'onclick' => "return confirm('Are you sure you want to reset all settings to default values?')"
             ]
         );
-        
+
         $output .= html_writer::end_div();
-        
+
         return $output;
     }
-    
-    private function render_future_sections() {
+
+    private function render_future_sections()
+    {
         $output = '';
-        
+
         // Badge Management Section
         $output .= $this->render_future_section(
             'Badge Management',
@@ -272,7 +281,7 @@ class settings_renderer {
                 'Manage badge icons and descriptions'
             ]
         );
-        
+
         // Leaderboard Display Section
         $output .= $this->render_future_section(
             'Leaderboard Display',
@@ -286,43 +295,45 @@ class settings_renderer {
                 'Configure point display format'
             ]
         );
-        
+
         return $output;
     }
-    
-    private function render_future_section($title, $icon, $header_class, $description, $features) {
+
+    private function render_future_section($title, $icon, $header_class, $description, $features)
+    {
         $output = html_writer::start_div('card mb-4');
-        
+
         // Header
         $output .= html_writer::start_div("card-header $header_class text-white");
-        $output .= html_writer::tag('h3', 
-            "<i class=\"$icon\"></i> $title " . 
+        $output .= html_writer::tag('h3',
+            "<i class=\"$icon\"></i> $title " .
             '<span class="badge bg-warning text-dark">Coming Soon</span>',
             ['class' => 'mb-0']
         );
         $output .= html_writer::tag('small', $description);
         $output .= html_writer::end_div();
-        
+
         // Body
         $output .= html_writer::start_div('card-body');
         $output .= html_writer::tag('p', 'This section will allow you to:', ['class' => 'text-muted']);
-        
+
         $output .= html_writer::start_tag('ul', ['class' => 'text-muted']);
         foreach ($features as $feature) {
             $output .= html_writer::tag('li', $feature);
         }
         $output .= html_writer::end_tag('ul');
-        
+
         $output .= html_writer::end_div();
-        
+
         $output .= html_writer::end_div();
-        
+
         return $output;
     }
-    
-    private function render_navigation($courseid) {
+
+    private function render_navigation($courseid)
+    {
         $leaderboard_url = new moodle_url('/local/learning_scorecard/index.php', ['id' => $courseid]);
-        
+
         $output = html_writer::start_div('text-center mt-4');
         $output .= html_writer::link(
             $leaderboard_url,
@@ -330,11 +341,12 @@ class settings_renderer {
             ['class' => 'btn btn-secondary btn-lg']
         );
         $output .= html_writer::end_div();
-        
+
         return $output;
     }
-    
-    public function render_reset_defaults_script() {
+
+    public function render_reset_defaults_script()
+    {
         return '
         <script>
         function resetXPDefaults() {
