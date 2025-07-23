@@ -141,16 +141,104 @@ iterations with the Moodle Learning Management System Service API.\@
 \section{Learning Analytics and Educational Data Mining}
 \subsection{Defining Learning Analytics}
 \subsection{Data-Driven Decision Making in Higher Education}
-\section{Agile Methodology in Educational Software Development}
-\subsection{Principles of Agile Methodology}
-\subsection{Agile Documentation Practices}
 
-\chapter{The Learning Scorecard: Concept, Evolution, and Requirements}
+\chapter{The Learning Scorecard: Concept and Evolution}
 \section{Genesis and Conceptualization of the Learning Scorecard}
 \section{Evolution Through Iterative Development}
 \subsection{Historical Overview of Versions}
 \subsection{Lessons Learned from Prior Iterations}
-\section{Defining Functional and Non-Functional Requirements}
+\section{LS Concepts}
+\noindent Throughout the development of the Learning Scorecard a lot of concepts have been introduced into the domain, some with a more clear mapping to a moodle concept than others.
+The best way to divide the LS concepts would be through what the systems responsabilities are.
+
+\subsection{Core Progression}
+
+\subsubsection{Experience Points (XP)}
+\paragraph\ Experience Points serve as the fundamental currency of progress within the Learning Scorecard platform.
+Students earn XP through completing various educational activities, creating a quantifiable measure of academic engagement and achievement.
+The XP system provides immediate feedback and enables comparison between students through leaderboards and progression tracking.
+
+\subsubsection{Ranks}
+\paragraph\ The rank system establishes hierarchical progression levels that students advance through based on accumulated XP.\@
+Faculty members can configure rank thresholds dynamically, setting minimum and maximum XP values for each rank level.
+The system includes ranks such as Newbie (entry level at 0 XP), Expert, Master, and Legendary, with each rank unlocking new privileges and recognition within the platform.
+
+\subsubsection{Quests}
+\paragraph\ Quests represent the core educational activities that students complete to earn XP and demonstrate learning.
+The system categorizes quests into five distinct types: Class Attendance, Practical Assignment, Quiz, Exercise, and Event.
+Each quest can be designated as mandatory (milestone quests) or optional, allowing for flexible curriculum design.
+Quests serve as the primary mechanism for connecting educational content with gamification elements.
+
+\subsection{Social Learning}
+
+\subsubsection{Alliances}
+\paragraph\ Alliances function as large-scale organizational units that typically correspond to academic classes, for example LEI or ETI.\@
+These structures facilitate competition and comparison at the class level while maintaining educational coherence.
+Students within alliances can compare their progress through dedicated leaderboards and participate in alliance-specific activities.
+
+\subsubsection{Guilds}
+\paragraph\ Guilds represent smaller collaborative units within alliances, typically corresponding to project teams or study groups.
+The guild system promotes cooperative learning by encouraging mutual assistance among members.
+Guild-specific achievements, badges, and leaderboards foster team spirit while maintaining individual accountability within the collaborative framework.
+
+\subsection{Achievement and Recognition}
+
+\subsubsection{Badges}
+\paragraph\ The badge system provides targeted recognition for specific accomplishments and behaviors.
+The platform includes 39 different badges organized into four categories: individual achievements, guild-based accomplishments, forum participation, and final questionnaire completion.
+Each badge category features multiple tiers (bronze, silver, gold, and platinum) that correspond to increasing levels of difficulty and commitment.
+
+\subsubsection{Trophies}
+\paragraph\ Trophies represent prestigious achievements awarded to top performers in various leaderboard categories.
+The system awards trophies for first-place positions in overall rankings (Best Score Player), guild performance (Best Guild), and combined metrics (Best Triathlon Player).
+Each trophy provides substantial XP rewards (typically 1000 XP) and serves as a highly visible symbol of excellence.
+
+\subsubsection{Avatars}
+\paragraph\ The avatar system enables profile customization while serving as a visual indicator of progression.
+Students unlock new avatar options as they advance through rank levels, with both male and female options available at each tier.
+This customization feature allows for personal expression while maintaining the connection between visual representation and academic achievement.
+
+\subsection{Competitive and Comparative}
+
+\subsubsection{Leaderboards}
+\paragraph\ Multiple leaderboard systems enable various forms of competition and comparison.
+The platform features five distinct leaderboards: overall individual rankings, guild-based comparisons, exercise-specific performance, quiz results, and combined metrics.
+Each leaderboard displays position, username, rank, avatar, and XP totals, creating transparency in academic performance while fostering healthy competition.
+
+\subsubsection{Last Chance System}
+\paragraph\ The Last Chance mechanism provides opportunities for recovery and continued engagement when students fall behind or make mistakes.
+This system prevents permanent failure states that could lead to disengagement, ensuring that all students can continue participating and improving their performance throughout the academic term.
+
+\subsection{Monitoring and Analytics}
+
+\subsubsection{Student Dashboard}
+\paragraph\ The student dashboard serves as the central interface for progress monitoring and decision-making.
+Students can view their advancement across different quest types, track XP accumulation, monitor rank progression, and analyze their performance relative to peers.
+The dashboard integrates all gamification elements into a cohesive user experience.
+
+\subsubsection{History Tracking}
+\paragraph\ The platform maintains comprehensive records of all student activities and achievements.
+The history system allows students to review their XP gains from each quest, track their progression over time, and understand the relationship between their efforts and outcomes.
+
+\subsection{Faculty Management}
+
+\subsubsection{Quest Configuration}
+\paragraph\ Faculty members can create and manage quests through both individual interfaces and bulk Excel imports.
+The system allows for dynamic quest addition throughout the term, enabling responsive curriculum adjustment based on student needs and learning objectives.
+
+\subsubsection{Rank and XP Management}
+\paragraph\ Instructors have comprehensive control over rank thresholds and XP distribution.
+This flexibility enables adaptation to different course structures, student populations, and learning objectives while maintaining game balance and engagement.
+
+\subsection{Assessment Integration}
+
+\subsubsection{Continuous Assessment Connection}
+\paragraph\ The gamification system integrates directly with academic assessment, allowing XP and rank progression to contribute to final course grades.
+This connection ensures that game mechanics support rather than distract from educational objectives.
+
+\subsubsection{Difficulty and Challenge Scaling}
+\paragraph\ The platform incorporates mechanisms for adjusting challenge levels and providing appropriate difficulty progression.
+This ensures that all students can find appropriate challenges while maintaining engagement across diverse skill levels and learning paces.
 
 \chapter{System Architecture and Design}
 \section{Overview of LS 2.5 Architecture}
@@ -190,7 +278,6 @@ iterations with the Moodle Learning Management System Service API.\@
 \section{Summary of Contributions}
 \section{Recommendations for Practice}
 \section{Avenues for Further Research}
-\section{Final Remarks}
 
 \renewcommand{\bibname}{References}
 
