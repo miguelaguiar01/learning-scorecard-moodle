@@ -76,6 +76,7 @@
   ],
   "latex-workshop.latex.clean.subfolder.enabled": true,
   "latex-workshop.latex.autoClean.run": "onBuilt",
+  "latex-workshop.latex.autoBuild.run": "onSave",
   "latex-workshop.linting.chktex.exec.path": "C:/Users/User/scoop/apps/latex/current/texmfs/install/miktex/bin/x64/chktex.exe",
   "latex-workshop.linting.chktex.enabled": true
 }

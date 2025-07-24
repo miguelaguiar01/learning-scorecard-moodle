@@ -13,6 +13,8 @@
 \usepackage{titlesec}
 \usepackage{enumitem}
 \usepackage{etoolbox}
+\usepackage{comment}
+\usepackage{caption}
 % you may need to uncomment the command below if you use eps format for figures
 %\usepackage{epstopdf}
 
@@ -148,20 +150,45 @@ iterations with the Moodle Learning Management System Service API.\@
 \subsection{Historical Overview of Versions}
 \subsection{Lessons Learned from Prior Iterations}
 \section{LS Concepts}
-\noindent Throughout the development of the Learning Scorecard a lot of concepts have been introduced into the domain, some with a more clear mapping to a moodle concept than others.
-The best way to divide the LS concepts would be through what the systems responsabilities are.
+\noindent Throughout the development of the Learning Scorecard a lot of concepts have been introduced into the domain, some with a more clear mapping to a Moodle concept than others.
+The best way to divide the LS concepts would be through each systems' main intended purpose.
 
-\subsection{Core Progression}
+\subsection{Academic: Institutional Structure}
+\subsubsection{Course}
+\paragraph\ A Course describes the overarching academic program (e.g., ``Computer Science``) that encompasses multiple curricular units. It also refers to the primary organizational division of a students degree.
+
+\subsubsection{Curricular Unit}
+\paragraph\ A Curricular Unit represents an individual subject within a Course, corresponding to specific learning objectives, content and assessments that students must complete as part of their academic progression.
+
+\subsection{Academic: Human Resources (TBC)}
+\subsubsection{Student}
+\paragraph\ A Student is a user enrolled in one or more Curricular Units and in at least one Course who participates in learning activities, completes quests, earns experience points progresses through the gamified learning system.
+
+\subsubsection{Teacher / Faculty}
+\paragraph\ Teachers or Faculty members are users responsible for creating and managing curricular content, designing quests and monitoring student progress within their assigned Curricular Units.
+
+\subsection{Academic: Curriculum}
+\subsubsection{Syllabus Contents}
+\paragraph\ Syllabus Contents encompass the planning of the Curricular Unit and all learning materials, resources and educational content within.
+
+\subsection{Academic: Organizational}
+\subsubsection{Calendar}
+\paragraph\ The Calendar is a concept that is meant as an organizational system for both students and faculty to organize their quests and allow a better monthly planning.
+
+\subsubsection{Timeline}
+\paragraph\ The Timeline is another concept of the LS organizational system that provides a chronological summary of the quests from the Curricular Unit.
+
+\subsection{Gamification: Core Progression}
 
 \subsubsection{Experience Points (XP)}
-\paragraph\ Experience Points serve as the fundamental currency of progress within the Learning Scorecard platform.
+\paragraph\ Experience Points serve as the fundamental display of progress within the Learning Scorecard platform.
 Students earn XP through completing various educational activities, creating a quantifiable measure of academic engagement and achievement.
 The XP system provides immediate feedback and enables comparison between students through leaderboards and progression tracking.
 
 \subsubsection{Ranks}
 \paragraph\ The rank system establishes hierarchical progression levels that students advance through based on accumulated XP.\@
 Faculty members can configure rank thresholds dynamically, setting minimum and maximum XP values for each rank level.
-The system includes ranks such as Newbie (entry level at 0 XP), Expert, Master, and Legendary, with each rank unlocking new privileges and recognition within the platform.
+The system includes ranks such as Newbie (entry level at 0 XP), Rookie, Skilled Expert, Master, and Legendary, with each rank unlocking new privileges and recognition within the platform.
 
 \subsubsection{Quests}
 \paragraph\ Quests represent the core educational activities that students complete to earn XP and demonstrate learning.
@@ -169,7 +196,7 @@ The system categorizes quests into five distinct types: Class Attendance, Practi
 Each quest can be designated as mandatory (milestone quests) or optional, allowing for flexible curriculum design.
 Quests serve as the primary mechanism for connecting educational content with gamification elements.
 
-\subsection{Social Learning}
+\subsection{Gamification: Social Learning}
 
 \subsubsection{Alliances}
 \paragraph\ Alliances function as large-scale organizational units that typically correspond to academic classes, for example LEI or ETI.\@
@@ -181,7 +208,7 @@ Students within alliances can compare their progress through dedicated leaderboa
 The guild system promotes cooperative learning by encouraging mutual assistance among members.
 Guild-specific achievements, badges, and leaderboards foster team spirit while maintaining individual accountability within the collaborative framework.
 
-\subsection{Achievement and Recognition}
+\subsection{Gamification: Achievement and Recognition}
 
 \subsubsection{Badges}
 \paragraph\ The badge system provides targeted recognition for specific accomplishments and behaviors.
@@ -198,17 +225,18 @@ Each trophy provides substantial XP rewards (typically 1000 XP) and serves as a 
 Students unlock new avatar options as they advance through rank levels, with both male and female options available at each tier.
 This customization feature allows for personal expression while maintaining the connection between visual representation and academic achievement.
 
-\subsection{Competitive and Comparative}
+\subsection{Gamification: Competitive and Motivation}
 
 \subsubsection{Leaderboards}
 \paragraph\ Multiple leaderboard systems enable various forms of competition and comparison.
 The platform features five distinct leaderboards: overall individual rankings, guild-based comparisons, exercise-specific performance, quiz results, and combined metrics.
 Each leaderboard displays position, username, rank, avatar, and XP totals, creating transparency in academic performance while fostering healthy competition.
 
-\subsubsection{Last Chance System}
+\subsubsection{Last Chances}
 \paragraph\ The Last Chance mechanism provides opportunities for recovery and continued engagement when students fall behind or make mistakes.
 This system prevents permanent failure states that could lead to disengagement, ensuring that all students can continue participating and improving their performance throughout the academic term.
 
+\begin{comment}
 \subsection{Monitoring and Analytics}
 
 \subsubsection{Student Dashboard}
@@ -226,7 +254,7 @@ The history system allows students to review their XP gains from each quest, tra
 \paragraph\ Faculty members can create and manage quests through both individual interfaces and bulk Excel imports.
 The system allows for dynamic quest addition throughout the term, enabling responsive curriculum adjustment based on student needs and learning objectives.
 
-\subsubsection{Rank and XP Management}
+\subsubsection{Rank and XP Configuration}
 \paragraph\ Instructors have comprehensive control over rank thresholds and XP distribution.
 This flexibility enables adaptation to different course structures, student populations, and learning objectives while maintaining game balance and engagement.
 
@@ -239,9 +267,10 @@ This connection ensures that game mechanics support rather than distract from ed
 \subsubsection{Difficulty and Challenge Scaling}
 \paragraph\ The platform incorporates mechanisms for adjusting challenge levels and providing appropriate difficulty progression.
 This ensures that all students can find appropriate challenges while maintaining engagement across diverse skill levels and learning paces.
+\end{comment}
 
 \chapter{System Architecture and Design}
-\section{Overview of LS 2.5 Architecture}
+\section{Overview of LS Architecture}
 \section{Technological Stack Selection}
 \section{System Components and Modular Design}
 \subsection{Student Interface and Experience}
@@ -249,17 +278,37 @@ This ensures that all students can find appropriate challenges while maintaining
 \subsection{Administrator Functions and Control}
 \section{Integrating the Ontological Framework}
 \section{Plugin Integration with Moodle}
+\subsection{Concept Mapping}
+\centering
+\begin{center}
+  \captionof{table}{Learning Scorecard vs Moodle Concept Mapping}
+  \begin{tabular}{ccc}
+    Concept            & Moodle                                                                & Feasibility \\ \hline
+    \multicolumn{3}{c}{\textit{Academic}}                                                                    \\
+    Course             & Course Categories                                                     & T           \\
+    Curricular Unit    & Course                                                                & T           \\
+    Student            & Users \& Roles                                                        & T           \\
+    Teacher / Faculty  & Users \& Roles                                                        & T           \\
+    Syllabus Contents  & Course Modules \& Tags                                                & T           \\
+    Calendar           & Calendar Events                                                       & P           \\
+    Timeline           & Activity Completion \& Progress                                       & P           \\
+    \multicolumn{3}{c}{\textit{Gamification}}                                                                \\
+    Experience Points  & Grade Items \& Custom Fields                                          & P           \\
+    Ranks              & Custom Implementation                                                 & P           \\
+    Quests             & Activities                                                            & T           \\
+    Alliances          & Groups \& Cohorts                                                     & T           \\
+    Guilds             & Groups                                                                & T           \\
+    Badges             & Badges System                                                         & T           \\
+    Trophies           & Badges System \& Custom Impl.                                         & P           \\
+    Avatars            & User Profiles, Files \& Custom Impl.                                  & P           \\
+    Leaderboards       & Gradebook \& Custom Views                                             & P           \\
+    Last Chance System & Conditional Activities                                                & P
+  \end{tabular}
+  \caption*{T - Total Mapping  P - Partial Mapping}
+\end{center}
+
 \section{Database Design and Data Flow}
 \section{Security and Scalability Considerations}
-
-\chapter{Implementation and Agile Development Process}
-\section{Adoption of Agile Methodology}
-\subsection{Sprint Planning and Execution}
-\subsection{Continuous Feedback and Iterative Refinement}
-\section{Key Implementation Milestones}
-\section{User Interface Design and Usability}
-\section{Addressing Implementation Challenges}
-\section{Documentation as a Living Artifact}
 
 \chapter{Evaluation and Results}
 \section{Demonstration of Key Features}
@@ -294,13 +343,13 @@ This ensures that all students can find appropriate challenges while maintaining
   \makeatother
 
   %\begin{thebibliography}{99}
-  \bibitem{aka73} H. Akaike (1973), \textquotedblleft Information Theory as an
+  \bibitem{aka73} H. Akaike (1973), \textquotedblleft\ Information Theory as an
   Extension of the Maximum Likelihood Principle\textquotedblright, in B. N.
   Petrov, and F. Csaki, (Eds.), \textit{Second International Symposium on
   Information Theory}, Akademiai Kiado, Budapest, pp. 267--281.
 
   \bibitem{and10} D.T. Anderson, J.C. Bezdek, M. Popescu, and J.M. Keller
-  (2010), \textquotedblleft Comparing Fuzzy, Probabilistic, and Possibilistic
+  (2010), \textquotedblleft\ Comparing Fuzzy, Probabilistic, and Possibilistic
   Partitions\textquotedblright, \textit{IEEE Transactions on Fuzzy Systems},
   18(5), 906--918.
 \end{thebibliography}
