@@ -6,3 +6,4 @@ docs/LS_THESIS/build/*
 docs/LS_THESIS/*.pdf
 
 docs/LS_THESIS/References/*
+.vscode/settings.json

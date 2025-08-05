@@ -129,20 +129,18 @@ The Learning Scorecard (LS) platform embodies this approach, merging business in
 This thesis presents the development of the Learning Scorecard v2.5: a
 prototype plugin that integrates some of the major features of the previous LS
 iterations with the Moodle Learning Management System Service API.\@
-\section{Background and Rationale}
+\section{Motivation}
 \section{Statement of the Problem}
 \section{Aims and Objectives}
 \section{Methodological Approach}
-\section{Contribution to Knowledge}
 \section{Structure of the Thesis}
 
-\chapter{Theoretical and Methodological Foundations}
+\chapter{Literature Review}
+\section{Learning Management Systems}
+
 \section{Gamification and Motivation in Education}
 \subsection{Theoretical Perspectives on Gamification}
 \subsection{Gamification and Student Engagement}
-\section{Learning Analytics and Educational Data Mining}
-\subsection{Defining Learning Analytics}
-\subsection{Data-Driven Decision Making in Higher Education}
 
 \chapter{The Learning Scorecard: Concept and Evolution}
 \section{Genesis and Conceptualization of the Learning Scorecard}
@@ -270,45 +268,48 @@ This ensures that all students can find appropriate challenges while maintaining
 \end{comment}
 
 \chapter{System Architecture and Design}
+\section{Requirements}
 \section{Overview of LS Architecture}
 \section{Technological Stack Selection}
-\section{System Components and Modular Design}
-\subsection{Student Interface and Experience}
-\subsection{Teacher Dashboard and Analytics}
-\subsection{Administrator Functions and Control}
-\section{Integrating the Ontological Framework}
+\section{Moodle Development Environment}
 \section{Plugin Integration with Moodle}
 \subsection{Concept Mapping}
 \centering
 \begin{center}
   \captionof{table}{Learning Scorecard vs Moodle Concept Mapping}
   \begin{tabular}{ccc}
-    Concept            & Moodle                                                                & Feasibility \\ \hline
-    \multicolumn{3}{c}{\textit{Academic}}                                                                    \\
-    Course             & Course Categories                                                     & T           \\
-    Curricular Unit    & Course                                                                & T           \\
-    Student            & Users \& Roles                                                        & T           \\
-    Teacher / Faculty  & Users \& Roles                                                        & T           \\
-    Syllabus Contents  & Course Modules \& Tags                                                & T           \\
-    Calendar           & Calendar Events                                                       & P           \\
-    Timeline           & Activity Completion \& Progress                                       & P           \\
-    \multicolumn{3}{c}{\textit{Gamification}}                                                                \\
-    Experience Points  & Grade Items \& Custom Fields                                          & P           \\
-    Ranks              & Custom Implementation                                                 & P           \\
-    Quests             & Activities                                                            & T           \\
-    Alliances          & Groups \& Cohorts                                                     & T           \\
-    Guilds             & Groups                                                                & T           \\
-    Badges             & Badges System                                                         & T           \\
-    Trophies           & Badges System \& Custom Impl.                                         & P           \\
-    Avatars            & User Profiles, Files \& Custom Impl.                                  & P           \\
-    Leaderboards       & Gradebook \& Custom Views                                             & P           \\
-    Last Chance System & Conditional Activities                                                & P
+    Concept            & Moodle                               & Feasibility \\ \hline
+    \multicolumn{3}{c}{\textit{Academic}}                                   \\
+    Course             & Course Categories                    & T           \\
+    Curricular Unit    & Course                               & T           \\
+    Student            & Users \& Roles                       & T           \\
+    Teacher / Faculty  & Users \& Roles                       & T           \\
+    Syllabus Contents  & Course Modules \& Tags               & T           \\
+    Calendar           & Calendar Events                      & P           \\
+    Timeline           & Activity Completion \& Progress      & P           \\
+    \multicolumn{3}{c}{\textit{Gamification}}                               \\
+    Experience Points  & Grade Items \& Custom Fields         & P           \\
+    Ranks              & Custom Implementation                & P           \\
+    Quests             & Activities                           & T           \\
+    Alliances          & Groups \& Cohorts                    & T           \\
+    Guilds             & Groups                               & T           \\
+    Badges             & Badges System                        & T           \\
+    Trophies           & Badges System \& Custom Impl.        & P           \\
+    Avatars            & User Profiles, Files \& Custom Impl. & P           \\
+    Leaderboards       & Gradebook \& Custom Views            & P           \\
+    Last Chance System & Conditional Activities               & P
   \end{tabular}
   \caption*{T - Total Mapping  P - Partial Mapping}
 \end{center}
 
 \section{Database Design and Data Flow}
-\section{Security and Scalability Considerations}
+\section{Security and Scalability Considerations}\
+
+\chapter{MVP}
+\section{System Components and Modular Design}
+\subsection{Student Interface and Experience}
+\subsection{Teacher Dashboard and Analytics}
+\subsection{Administrator Functions and Control}
 
 \chapter{Evaluation and Results}
 \section{Demonstration of Key Features}
@@ -317,16 +318,10 @@ This ensures that all students can find appropriate challenges while maintaining
 \section{Comparative Analysis with Previous Approaches}
 \section{Discussion of Evaluation Metrics}
 
-\chapter{Critical Analysis, Limitations, and Lessons Learned}
-\section{Strengths and Achievements}
-\section{Identified Limitations and Challenges}
-\section{Reflections on the Development Process}
-\section{Implications for Future Educational Technology}
-
-\chapter{Conclusions and Future Directions}
+\chapter{Conclusions}
 \section{Summary of Contributions}
-\section{Recommendations for Practice}
-\section{Avenues for Further Research}
+\section{Limitations and Challenges}
+\section{Future Directions for LS}
 
 \renewcommand{\bibname}{References}
 
@@ -346,7 +341,7 @@ This ensures that all students can find appropriate challenges while maintaining
   \bibitem{aka73} H. Akaike (1973), \textquotedblleft\ Information Theory as an
   Extension of the Maximum Likelihood Principle\textquotedblright, in B. N.
   Petrov, and F. Csaki, (Eds.), \textit{Second International Symposium on
-  Information Theory}, Akademiai Kiado, Budapest, pp. 267--281.
+    Information Theory}, Akademiai Kiado, Budapest, pp. 267--281.
 
   \bibitem{and10} D.T. Anderson, J.C. Bezdek, M. Popescu, and J.M. Keller
   (2010), \textquotedblleft\ Comparing Fuzzy, Probabilistic, and Possibilistic
