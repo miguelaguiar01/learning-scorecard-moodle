@@ -137,6 +137,20 @@ iterations with the Moodle Learning Management System Service API.\@
 
 \chapter{Literature Review}
 \section{Learning Management Systems}
+\noindent Learning Management Systems (LMS) represent sophisticated software applications engineered to administer, track, report, automate, and deliver educational courses, training programs, and comprehensive learning materials. Following their initial emergence in the late 1990s, these platforms have achieved near-universal adoption across higher education institutions globally. Recently, the unprecedented expansion of LMS usage has been significantly accelerated by the institutional shift toward remote learning by the COVID-19 pandemic.
+
+There are a plethora of LMS available for educational institutions, with ommercial and open-source platforms representing the two primary categories of LMS offerings~\cite{mohd_kasim_choosing_2016}. Commercial LMS are either available in the market for a price or, although very rarely, proprietary and developped by the institution. In contrast, the open source alternative is available at no cost to the institution, although technical expertise is required aswell as regular functional assessments. Open-source systems provide publicly accessible source code that institutions can modify and improve to meet their specific requirements and needs \cite{cavus_comparison_2014}.
+
+Moodle (Modular Object-Oriented Dynamic Learning Environment) stands as one of the most widely adopted open-source learning management systems globally. According to a recent systematic review on tendencies in the use of LMS, Moodle is the most popular and preferred open-source LMS~\cite{altinpulluk_systematic_2021}. The platform's extensive reach is evidenced by its current deployment across 238 countries, serving approximately 468 million users worldwide~\cite{moodle_stats_2025}.
+
+From a technical perspective, Moodle is built on a layered architecture that ensures flexibility and scalability. The presentation layer handles the user interface and allows users to interact both on desktop and mobile devices. The application layer accommodates core functionalities and acts as an intermediary between the presentation and data layer, supporting the installation of plugins and modules to customize features. The data layer includes the database management system, typically SQL-based, which stores and manages all the data. This modular design allows institutions to customize the functionality and appearance through a extensive plugin ecosystem.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/Moodle-three-tier-architecture.png}
+  \caption{Moodle three tier architecture. Source: Dolawattha et al.~\cite{dolawattha_impact_2019}.}
+  \label{fig:moodle_arch}
+\end{figure}
 
 \section{Gamification and Motivation in Education}
 \subsection{Theoretical Perspectives on Gamification}
@@ -144,95 +158,64 @@ iterations with the Moodle Learning Management System Service API.\@
 
 \chapter{The Learning Scorecard: Concept and Evolution}
 \section{Genesis and Conceptualization of the Learning Scorecard}
+\noindent The Learning Scorecard emerged from a fundamental pedagogical challenge identified within higher educational institutions: the lack of understanding by faculty members regarding the difficulties experienced by students in relations to the content taught in curricular units aswell as the students disinterest and lack motivation. Initially, this platform was conceptualized as a comprehensive academic performance management system designed to support both students and faculty through data-driven insights that assist educators in continuously monitoring the curricular units they teach while enabling students to visualize their performance in each course in which they are enrolled. Their main mission was to offer higher education students an analytic environment that allows progress monitorization in a curricular unit, contributing for a better learning experience.
+
+The platform was originally conceptualized with three distinct user perspectives: student view, teacher view, and administrative view. The student view provides essential visualizations that enable students to understand their learning trajectory in a specific curricular unit while offering tools that provide important data for continuous monitoring by faculty. The teacher view provides management, evaluations and visualization tools for educators regarding each curricular unit they teach, offering various visualizations to track each students progress through all phases of the curricular unit along with assessment tools.
+
 \section{Evolution Through Iterative Development}
 \subsection{Historical Overview of Versions}
+\noindent The Learning Scorecard development followed a systematic timeline beginning in the 2015/16 academic year by a groupp of Computer Science masters students attending the Informatic Systems of Decision Support II curricular unit. The platform evolved through \textbf{X} major versions, each incorporating lessons from previous iterations and expanding functionality based on user feedback.
+
+\textbf{Learning Scorecard Version 1 (2016)}
+
+\textbf{Learning Scorecard Version 2 (2017)}
+
+\textbf{Learning Scorecard Version 3 (2018)}
+
 \subsection{Lessons Learned from Prior Iterations}
-\section{LS Concepts}
-\noindent Throughout the development of the Learning Scorecard a lot of concepts have been introduced into the domain, some with a more clear mapping to a Moodle concept than others.
-The best way to divide the LS concepts would be through each systems' main intended purpose.
+\section{Learning Scorecard Conceptual Framework}
 
-\subsection{Academic: Institutional Structure}
-\subsubsection{Course}
-\paragraph\ A Course describes the overarching academic program (e.g., ``Computer Science``) that encompasses multiple curricular units. It also refers to the primary organizational division of a students degree.
+The Learning Scorecard (LS) conceptual framework encompasses a comprehensive set of interconnected concepts designed to support gamified learning experiences in higher education. These concepts can be organized into four primary domains: Academic Structure, Gamification Mechanics, Social Learning, and Performance Recognition.
 
-\subsubsection{Curricular Unit}
-\paragraph\ A Curricular Unit represents an individual subject within a Course, corresponding to specific learning objectives, content and assessments that students must complete as part of their academic progression.
+\subsection{Academic Structure and Organization}
 
-\subsection{Academic: Human Resources (TBC)}
-\subsubsection{Student}
-\paragraph\ A Student is a user enrolled in one or more Curricular Units and in at least one Course who participates in learning activities, completes quests, earns experience points progresses through the gamified learning system.
+The academic foundation of the Learning Scorecard is built upon traditional higher education organizational structures, adapted to support digital learning environments.
 
-\subsubsection{Teacher / Faculty}
-\paragraph\ Teachers or Faculty members are users responsible for creating and managing curricular content, designing quests and monitoring student progress within their assigned Curricular Units.
+\textbf{Courses and Curricular Units.} The system recognizes a two-tier academic structure where \textit{Courses} represent overarching academic programs (e.g., "Computer Science") that encompass multiple \textit{Curricular Units}. Each Curricular Unit corresponds to an individual subject with specific learning objectives, content, and assessments that students must complete as part of their academic progression. This hierarchical organization maintains consistency with traditional academic frameworks while enabling digital tracking and gamification.
 
-\subsection{Academic: Curriculum}
-\subsubsection{Syllabus Contents}
-\paragraph\ Syllabus Contents encompass the planning of the Curricular Unit and all learning materials, resources and educational content within.
+\textbf{Students and Faculty.} The system accommodates two primary user roles: \textit{Students}, who are enrolled in one or more Curricular Units and participate in gamified learning activities, and \textit{Teachers} or Faculty members, who are responsible for creating and managing curricular content, designing learning activities, and monitoring student progress within their assigned Curricular Units.
 
-\subsection{Academic: Organizational}
-\subsubsection{Calendar}
-\paragraph\ The Calendar is a concept that is meant as an organizational system for both students and faculty to organize their quests and allow a better monthly planning.
+\textbf{Syllabus Contents, Calendar and Timeline.} \textit{Syllabus Contents} encompass all learning materials, resources, and educational content within a Curricular Unit. The organizational framework includes both \textit{Calendar} and \textit{Timeline} concepts that serve as complementary planning systems, enabling students and faculty to organize learning activities and maintain temporal awareness of curricular progression.
 
-\subsubsection{Timeline}
-\paragraph\ The Timeline is another concept of the LS organizational system that provides a chronological summary of the quests from the Curricular Unit.
+\subsection{Gamification Mechanics}
 
-\subsection{Gamification: Core Progression}
+The core gamification elements provide the foundation for student engagement and progress tracking through game-like mechanics adapted to educational contexts.
 
-\subsubsection{Experience Points (XP)}
-\paragraph\ Experience Points serve as the fundamental display of progress within the Learning Scorecard platform.
-Students earn XP through completing various educational activities, creating a quantifiable measure of academic engagement and achievement.
-The XP system provides immediate feedback and enables comparison between students through leaderboards and progression tracking.
+\textbf{Experience Points and Ranks.} \textit{Experience Points} (XP) serve as the fundamental currency of progress within the platform, earned through completion of various educational activities. The \textit{Rank} system establishes hierarchical progression levels based on accumulated XP, including ranks such as Newbie (entry level at 0 XP), Rookie, Skilled Expert, Master, and Legendary. Faculty members can configure rank thresholds dynamically, with each rank unlocking new privileges and recognition within the platform.
 
-\subsubsection{Ranks}
-\paragraph\ The rank system establishes hierarchical progression levels that students advance through based on accumulated XP.\@
-Faculty members can configure rank thresholds dynamically, setting minimum and maximum XP values for each rank level.
-The system includes ranks such as Newbie (entry level at 0 XP), Rookie, Skilled Expert, Master, and Legendary, with each rank unlocking new privileges and recognition within the platform.
+\textbf{Quests.} \textit{Quests} represent the core educational activities that students complete to earn XP and demonstrate learning. The system categorizes quests into five distinct types: Class Attendance, Practical Assignment, Quiz, Exercise, and Event. Each quest can be designated as mandatory (milestone quests) or optional, providing flexibility in curriculum design while maintaining educational objectives.
 
-\subsubsection{Quests}
-\paragraph\ Quests represent the core educational activities that students complete to earn XP and demonstrate learning.
-The system categorizes quests into five distinct types: Class Attendance, Practical Assignment, Quiz, Exercise, and Event.
-Each quest can be designated as mandatory (milestone quests) or optional, allowing for flexible curriculum design.
-Quests serve as the primary mechanism for connecting educational content with gamification elements.
+\textbf{Last Chances.} The \textit{Last Chance} mechanism provides opportunities for recovery and continued engagement when students fall behind or make mistakes, preventing permanent failure states that could lead to disengagement and ensuring continued participation throughout the academic term.
 
-\subsection{Gamification: Social Learning}
+\subsection{Social Learning Framework}
 
-\subsubsection{Alliances}
-\paragraph\ Alliances function as large-scale organizational units that typically correspond to academic classes, for example LEI or ETI.\@
-These structures facilitate competition and comparison at the class level while maintaining educational coherence.
-Students within alliances can compare their progress through dedicated leaderboards and participate in alliance-specific activities.
+The social components of the Learning Scorecard foster collaboration and healthy competition among students through structured group dynamics.
 
-\subsubsection{Guilds}
-\paragraph\ Guilds represent smaller collaborative units within alliances, typically corresponding to project teams or study groups.
-The guild system promotes cooperative learning by encouraging mutual assistance among members.
-Guild-specific achievements, badges, and leaderboards foster team spirit while maintaining individual accountability within the collaborative framework.
+\textbf{Alliances.} \textit{Alliances} function as large-scale organizational units that typically correspond to academic classes or programs (e.g., LEI or ETI). These structures facilitate competition and comparison at the class level while maintaining educational coherence, enabling students to compare their progress through dedicated leaderboards and participate in alliance-specific activities.
 
-\subsection{Gamification: Achievement and Recognition}
+\textbf{Guilds.} \textit{Guilds} represent smaller collaborative units within alliances, typically corresponding to project teams or study groups. The guild system promotes cooperative learning by encouraging mutual assistance among members, with guild-specific achievements, badges, and leaderboards fostering team spirit while maintaining individual accountability within the collaborative framework.
 
-\subsubsection{Badges}
-\paragraph\ The badge system provides targeted recognition for specific accomplishments and behaviors.
-The platform includes 39 different badges organized into four categories: individual achievements, guild-based accomplishments, forum participation, and final questionnaire completion.
-Each badge category features multiple tiers (bronze, silver, gold, and platinum) that correspond to increasing levels of difficulty and commitment.
+\subsection{Recognition and Achievement System}
 
-\subsubsection{Trophies}
-\paragraph\ Trophies represent prestigious achievements awarded to top performers in various leaderboard categories.
-The system awards trophies for first-place positions in overall rankings (Best Score Player), guild performance (Best Guild), and combined metrics (Best Triathlon Player).
-Each trophy provides substantial XP rewards (typically 1000 XP) and serves as a highly visible symbol of excellence.
+The recognition framework provides multiple pathways for acknowledging student accomplishments and maintaining motivation through visible achievements.
 
-\subsubsection{Avatars}
-\paragraph\ The avatar system enables profile customization while serving as a visual indicator of progression.
-Students unlock new avatar options as they advance through rank levels, with both male and female options available at each tier.
-This customization feature allows for personal expression while maintaining the connection between visual representation and academic achievement.
+\textbf{Badges.} The \textit{Badge} system provides targeted recognition for specific accomplishments and behaviors, featuring 39 different badges organized into four categories: individual achievements, guild-based accomplishments, forum participation, and final questionnaire completion. Each category includes multiple tiers (bronze, silver, gold, and platinum) corresponding to increasing levels of difficulty and commitment.
 
-\subsection{Gamification: Competitive and Motivation}
+\textbf{Trophies.} \textit{Trophies} represent the highest level of achievement, awarded to top performers in various leaderboard categories including overall rankings (Best Score Player), guild performance (Best Guild), and combined metrics (Best Triathlon Player). Each trophy provides substantial XP rewards (typically 1000 XP) and serves as a highly visible symbol of excellence.
 
-\subsubsection{Leaderboards}
-\paragraph\ Multiple leaderboard systems enable various forms of competition and comparison.
-The platform features five distinct leaderboards: overall individual rankings, guild-based comparisons, exercise-specific performance, quiz results, and combined metrics.
-Each leaderboard displays position, username, rank, avatar, and XP totals, creating transparency in academic performance while fostering healthy competition.
+\textbf{Avatars.} The \textit{Avatar} system enables profile customization while serving as a visual indicator of progression. Students unlock new avatar options as they advance through rank levels, with both male and female options available at each tier, allowing for personal expression while maintaining the connection between visual representation and academic achievement.
 
-\subsubsection{Last Chances}
-\paragraph\ The Last Chance mechanism provides opportunities for recovery and continued engagement when students fall behind or make mistakes.
-This system prevents permanent failure states that could lead to disengagement, ensuring that all students can continue participating and improving their performance throughout the academic term.
+\textbf{Leaderboards.} Multiple \textit{Leaderboard} systems enable various forms of competition and comparison through five distinct categories: overall individual rankings, guild-based comparisons, exercise-specific performance, quiz results, and combined metrics. Each leaderboard displays position, username, rank, avatar, and XP totals, creating transparency in academic performance while fostering healthy competition among participants.
 
 \begin{comment}
 \subsection{Monitoring and Analytics}
@@ -337,16 +320,15 @@ This ensures that all students can find appropriate challenges while maintaining
   \renewcommand\@biblabel[1]{}
   \makeatother
 
-  %\begin{thebibliography}{99}
-  \bibitem{aka73} H. Akaike (1973), \textquotedblleft\ Information Theory as an
-  Extension of the Maximum Likelihood Principle\textquotedblright, in B. N.
-  Petrov, and F. Csaki, (Eds.), \textit{Second International Symposium on
-    Information Theory}, Akademiai Kiado, Budapest, pp. 267--281.
+  \bibitem{mohd_kasim_choosing_2016} N.N. Mohd Kasim and F. Khalid (2016), \textquotedblleft Choosing the Right Learning Management System (LMS) for the Higher Education Institution Context: A Systematic Review\textquotedblright, \textit{International Journal of Emerging Technologies in Learning (iJET)}, 11(6), 55.
 
-  \bibitem{and10} D.T. Anderson, J.C. Bezdek, M. Popescu, and J.M. Keller
-  (2010), \textquotedblleft\ Comparing Fuzzy, Probabilistic, and Possibilistic
-  Partitions\textquotedblright, \textit{IEEE Transactions on Fuzzy Systems},
-  18(5), 906--918.
+  \bibitem{cavus_comparison_2014} N. Cavus and T. Zabadi (2014), \textquotedblleft A Comparison of Open Source Learning Management Systems\textquotedblright, \textit{Procedia - Social and Behavioral Sciences}, 143, 521--526.
+
+  \bibitem{altinpulluk_systematic_2021} H. Altinpulluk and M. Kesim (2021), \textquotedblleft A Systematic Review of the Tendencies in the Use of Learning Management Systems\textquotedblright, \textit{Turkish Online Journal of Distance Education}, 22(3), 40--54.
+
+  \bibitem{moodle_stats_2025} Moodle (2025), \textquotedblleft Moodle Statistics\textquotedblright, Available at: https://stats.moodle.org/ (Accessed: 6 August 2025).
+
+  \bibitem{dolawattha_impact_2019} D.D.M. Dolawattha, H.K.S. Pramadasa, and P.M. Jayaweera (2019), \textquotedblleft The Impact Model: Teachers' Mobile Learning Adoption in Higher Education\textquotedblright, \textit{International Journal of Education and Development using Information and Communication Technology (IJEDICT)}, 15(4), 71--88.
 \end{thebibliography}
 
 \end{document}
