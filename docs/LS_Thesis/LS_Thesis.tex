@@ -351,6 +351,17 @@ requirements:
 This last non-functional requirement, as Costa correctly identified is a missed opportunity as the faculty will have no way of knowing which student is at risk
 and ultimately take advantage of such introspective metrics on student performance. As the system is integrated into moodles learning environment and all this information is already available to the faculty I believe this NFR should be altered into a more transparent requirement.
 \section{Overview of LS Architecture}
+\noindent The LS architecture has withstood many iterations throughout the years and has become more complex and polished through them, as new features have been added, alternatives and changes in architecture have been thought as most adequate. Let's suppose we take the latest version as a baseline and dive into what can be improved.
+
+In the latest version of the Learning Scorecard, version 2.0, the technological stack consisted of a React frontend that communicated with an Express (NodeJS) backend, the backend, in turn communicated through REST with a virtual machine hosted in Azure to a NoSQL mongoDB database and a graphDB. The main platform was hosted in Heroku. 
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/LS2Architecture.png}
+  \caption{LS2.0 Technology Stack. Source: Lopes~\cite{lopes_ontologies_2021}.}
+  \label{fig:ls2_arch}
+\end{figure}
+
+
 \section{Moodle Development Environment}
 \noindent The first challenge faced when beginning the development of any new system is to configure the development environment. This task usually begins with setting up a source code management (SCM) system, like Git~\cite{git_scm} and configuring your IDE with the correct formatting, intellisense and file structure.
 The moodle plugin development has brought up some additional effort as a moodle instance is required.
@@ -484,6 +495,8 @@ For the block plugin the localtion will be inside a directory called
   \bibitem{saroja_functional_2023} S. Saroja and S. Haseena (2023), \textquotedblleft Functional and Non-Functional Requirements in Agile Software Development\textquotedblright, in \textit{Agile Software Development}, John Wiley \& Sons, Ltd, pp. 71--86.
 
   \bibitem{costa_thesis_2017} D.S. Costa (2017), \textquotedblleft Learning Scorecard: Plataforma para a Monitorização da Experiência de Aprendizagem de Alunos no Ensino Superior Aplicando Técnicas de Business Intelligence e Gamificação\textquotedblright, Master's Thesis, ISCTE-IUL, Lisbon, Portugal.
+
+  \bibitem{lopes_ontologies_2021} M.Â.D. Lopes (2021), \textquotedblleft Utilização de ontologias para a gestão de dados educacionais: caso de estudo Learning Scorecard\textquotedblright, Master's Thesis, ISCTE - Instituto Universitário de Lisboa, Lisbon, Portugal.
 
   \bibitem{git_scm} Git Community (2024), \textquotedblleft Git: Distributed Version Control System\textquotedblright, Available at: https://git-scm.com/.
 
