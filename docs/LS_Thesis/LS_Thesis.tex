@@ -16,6 +16,7 @@
 \usepackage{comment}
 \usepackage{caption}
 \usepackage{enumitem}
+\usepackage{float}
 % you may need to uncomment the command below if you use eps format for figures
 %\usepackage{epstopdf}
 
@@ -158,13 +159,6 @@ LMS~\cite{altinpulluk_systematic_2021}. The platform's extensive reach is
 evidenced by its current deployment across 238 countries, serving approximately
 468 million users worldwide~\cite{moodle_stats_2025}.
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.8\textwidth]{images/Moodle-three-tier-architecture.png}
-  \caption{Moodle three tier architecture. Source: Dolawattha et al.~\cite{dolawattha_impact_2019}.}
-  \label{fig:moodle_arch}
-\end{figure}
-
 From a technical perspective, Moodle is built on a layered architecture that
 ensures flexibility and scalability. The presentation layer handles the user
 interface and allows users to interact both on desktop and mobile devices. The
@@ -174,6 +168,13 @@ and modules to customize features. The data layer includes the database
 management system, typically SQL-based, which stores and manages all the data.
 This modular design allows institutions to customize the functionality and
 appearance through a extensive plugin ecosystem.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/Moodle-three-tier-architecture.png}
+  \caption{Moodle three tier architecture. Source: Dolawattha et al.~\cite{dolawattha_impact_2019}.}
+  \label{fig:moodle_arch}
+\end{figure}
 
 Moodle offers many plugins that allow for functionality expansion. There are
 multiple types of plugins from local plugins, block plugins all the way to
@@ -327,7 +328,6 @@ myself. From Costa's functional requirements:
   \item The LS platform must include gamification elements (score, ranks, quests,
         leaderboards)
 \end{enumerate}
-At first glance, we can satisfy the requirements 1,2 and 3 just with the new LS version integrated as a moodle plugin. The first requirement specifies the necessity of a profile and authentication credentials. Every student receives a moodle account aswell as authentication credentials at the start of each new course year. The second requirement is also already satisfied as the LS 2.5 version will be a plugin of moodle, therefore it will be integrated with the e-learning system by itself. Lastly, the third requirement we can already satisfy is also a base moodle functionality. All accounts are user accounts although their role (student, teacher, etc) limits what they can access.
 
 \textbf{Non-Functional Requirements (FR)}
 
@@ -353,14 +353,65 @@ and ultimately take advantage of such introspective metrics on student performan
 \section{Overview of LS Architecture}
 \noindent The LS architecture has withstood many iterations throughout the years and has become more complex and polished through them, as new features have been added, alternatives and changes in architecture have been thought as most adequate. Let's suppose we take the latest version as a baseline and dive into what can be improved.
 
-In the latest version of the Learning Scorecard, version 2.0, the technological stack consisted of a React frontend that communicated with an Express (NodeJS) backend, the backend, in turn communicated through REST with a virtual machine hosted in Azure to a NoSQL mongoDB database and a graphDB. The main platform was hosted in Heroku. 
-\begin{figure}[h]
+In the latest version of the Learning Scorecard, version 2.0, the technological
+stack consisted of a React~\cite{react_dev} frontend that communicated with an
+Express~\cite{express_js} (NodeJS~\cite{nodejs_org}) backend, the backend, in
+turn communicated through REST with a virtual machine hosted in
+Azure~\cite{azure_microsoft} to a NoSQL mongoDB~\cite{mongodb_database}
+database and a graphDB~\cite{graphdb_ontotext}. The main platform was hosted in
+Heroku~\cite{heroku_platform}.
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.8\textwidth]{images/LS2Architecture.png}
   \caption{LS2.0 Technology Stack. Source: Lopes~\cite{lopes_ontologies_2021}.}
   \label{fig:ls2_arch}
 \end{figure}
 
+This architecture, although scalable, modular and modern, has a few flaws,
+mainly in the fact that it is not integrated with the ISCTE moodle environment
+(second functional requirement), relying on manual input by the faculty and
+students making it not an ideal system and one that would become more of a
+chore for teachers who already have so much to grade, register and manage and
+students who have multiple classes, quizes and exercises to keep track of.
+
+We must then conjure a system that is integrated with the ISCTE moodle
+environment and satisfies all functional and non-functional requirements set
+previously.
+
+At first glance, it is possible to achieve a more integrated system making use
+of the platform developed previously with the use of the moodle native web
+services, although it is less secure to have students information on a
+independent and standalone website and would require the web services to be
+enabled and for the Learning Scorecard system to have a private API key for
+authentication. It would also be reliant on the students and faculty accessing
+an external platform which would require an incentive to do so from the
+teacher. Heroku's free tier where a developer could host a website for free has
+also since been discontinued~\cite{heroku_pricing} and would incur an extra
+payment to keep the Learning Scorecard running.
+
+A more viable option would be to create a set of moodle plugins which are
+installed into the ISCTE moodle environment yearly. Moodle is extremely modular
+and has available a service API that provides almost all functionality needed
+to retrieve, update and expand the students information, grades and provide
+gamification features.
+
+We can satisfy the requirements 1,2 and 3 just with the new LS version
+integrated as a moodle plugin. The first requirement specifies the necessity of
+a profile and authentication credentials. Every student receives a moodle
+account aswell as authentication credentials at the start of each new course
+year. The second requirement is also already satisfied as the LS 2.5 version
+will be a plugin of moodle, therefore it will be integrated with the e-learning
+system by itself. Lastly, the third requirement we can already satisfy is also
+a base moodle functionality. All accounts are user accounts although their role
+(student, teacher, etc) limits what they can access.
+
+The proof of concept for this Learning Scorecard transition to a set of moodle
+plugins will be what I will be exploring throughout this thesis as it seems
+like the most integrated, affordable and scalable option. It will run in the
+ISCTE servers, attached to the already present and yearly updated moodle
+instance. This way, we can achieve a seemless integration for the students and
+faculty without the costs and security issues that would arise from the
+standalone LS web application.
 
 \section{Moodle Development Environment}
 \noindent The first challenge faced when beginning the development of any new system is to configure the development environment. This task usually begins with setting up a source code management (SCM) system, like Git~\cite{git_scm} and configuring your IDE with the correct formatting, intellisense and file structure.
@@ -458,7 +509,6 @@ For the block plugin the localtion will be inside a directory called
 
 \chapter{Evaluation and Results}
 \section{Demonstration of Key Features}
-\section{Use Cases: Pilot Deployments and User Stories}
 \section{Feedback and Empirical Results}
 \section{Comparative Analysis with Previous Approaches}
 \section{Discussion of Evaluation Metrics}
@@ -496,7 +546,23 @@ For the block plugin the localtion will be inside a directory called
 
   \bibitem{costa_thesis_2017} D.S. Costa (2017), \textquotedblleft Learning Scorecard: Plataforma para a Monitorização da Experiência de Aprendizagem de Alunos no Ensino Superior Aplicando Técnicas de Business Intelligence e Gamificação\textquotedblright, Master's Thesis, ISCTE-IUL, Lisbon, Portugal.
 
+  \bibitem{react_dev} Meta Platforms, Inc. (2024), \textquotedblleft React: The Library for Web and Native User Interfaces\textquotedblright, Available at: https://react.dev/ (Accessed: 28 August 2025).
+
+  \bibitem{express_js} OpenJS Foundation (2024), \textquotedblleft Express: Fast, Unopinionated, Minimalist Web Framework for Node.js\textquotedblright, Available at: https://expressjs.com/ (Accessed: 28 August 2025).
+
+  \bibitem{nodejs_org} OpenJS Foundation (2024), \textquotedblleft Node.js: JavaScript Runtime Built on Chrome's V8 JavaScript Engine\textquotedblright, Available at: https://nodejs.org/en/ (Accessed: 28 August 2025).
+
+  \bibitem{azure_microsoft} Microsoft Corporation (2024), \textquotedblleft Microsoft Azure: Cloud Computing Platform and Services\textquotedblright, Available at: https://azure.microsoft.com/en-us/ (Accessed: 28 August 2025).
+
+  \bibitem{mongodb_database} MongoDB, Inc. (2024), \textquotedblleft MongoDB: The Developer Data Platform\textquotedblright, Available at: https://www.mongodb.com/ (Accessed: 28 August 2025).
+
+  \bibitem{graphdb_ontotext} Ontotext (2024), \textquotedblleft GraphDB: Enterprise Ready RDF Database\textquotedblright, Available at: https://graphdb.ontotext.com/ (Accessed: 28 August 2025).
+
+  \bibitem{heroku_platform} Salesforce, Inc. (2024), \textquotedblleft Heroku: Cloud Application Platform\textquotedblright, Available at: https://www.heroku.com/ (Accessed: 28 August 2025).
+
   \bibitem{lopes_ontologies_2021} M.Â.D. Lopes (2021), \textquotedblleft Utilização de ontologias para a gestão de dados educacionais: caso de estudo Learning Scorecard\textquotedblright, Master's Thesis, ISCTE - Instituto Universitário de Lisboa, Lisbon, Portugal.
+
+  \bibitem{heroku_pricing} Salesforce, Inc. (2024), \textquotedblleft Heroku Pricing\textquotedblright, Available at: https://www.heroku.com/pricing/ (Accessed: 28 August 2025).
 
   \bibitem{git_scm} Git Community (2024), \textquotedblleft Git: Distributed Version Control System\textquotedblright, Available at: https://git-scm.com/.
 
