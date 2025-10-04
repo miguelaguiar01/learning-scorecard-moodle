@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/learning_scorecard/db" VERSION="20241225" COMMENT="XMLDB file for Moodle local/learning_scorecard plugin"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    
+    <!-- Example: Student XP tracking table -->
+    <TABLE NAME="local_ls_student_xp" COMMENT="Stores XP data for students">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Foreign key to user.id"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Foreign key to course.id"/>
+        <FIELD NAME="quiz_xp" TYPE="number" LENGTH="10" NOTNULL="true" DEFAULT="0" DECIMALS="2" SEQUENCE="false" COMMENT="XP from quizzes"/>
+        <FIELD NAME="exercise_xp" TYPE="number" LENGTH="10" NOTNULL="true" DEFAULT="0" DECIMALS="2" SEQUENCE="false" COMMENT="XP from exercises"/>
+        <FIELD NAME="bonus_xp" TYPE="number" LENGTH="10" NOTNULL="true" DEFAULT="0" DECIMALS="2" SEQUENCE="false" COMMENT="Bonus XP from activities"/>
+        <FIELD NAME="total_xp" TYPE="number" LENGTH="10" NOTNULL="true" DEFAULT="0" DECIMALS="2" SEQUENCE="false" COMMENT="Total accumulated XP"/>
+        <FIELD NAME="level" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Current student level"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Timestamp when record was created"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Timestamp when record was last modified"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="userid_courseid" UNIQUE="true" FIELDS="userid, courseid" COMMENT="Unique constraint for user-course combination"/>
+        <INDEX NAME="courseid_totalxp" UNIQUE="false" FIELDS="courseid, total_xp" COMMENT="Index for leaderboard queries"/>
+        <INDEX NAME="timemodified" UNIQUE="false" FIELDS="timemodified" COMMENT="Index for recently modified records"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Example: XP Settings table -->
+    <TABLE NAME="local_ls_xp_settings" COMMENT="Stores XP calculation settings per course">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Foreign key to course.id"/>
+        <FIELD NAME="quiz_base_xp" TYPE="number" LENGTH="8" NOTNULL="true" DEFAULT="10" DECIMALS="2" SEQUENCE="false" COMMENT="Base XP per quiz"/>
+        <FIELD NAME="exercise_base_xp" TYPE="number" LENGTH="8" NOTNULL="true" DEFAULT="5" DECIMALS="2" SEQUENCE="false" COMMENT="Base XP per exercise"/>
+        <FIELD NAME="forum_post_xp" TYPE="number" LENGTH="8" NOTNULL="true" DEFAULT="2" DECIMALS="2" SEQUENCE="false" COMMENT="XP per forum post"/>
+        <FIELD NAME="perfect_score_multiplier" TYPE="number" LENGTH="8" NOTNULL="true" DEFAULT="1.5" DECIMALS="2" SEQUENCE="false" COMMENT="Multiplier for perfect scores"/>
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Whether XP tracking is enabled"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="courseid" UNIQUE="true" FIELDS="courseid" COMMENT="Unique settings per course"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Example: XP History/Log table -->
+    <TABLE NAME="local_ls_xp_history" COMMENT="Logs XP changes for audit trail">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Foreign key to user.id"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Foreign key to course.id"/>
+        <FIELD NAME="activity_type" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Type of activity (quiz, exercise, forum, etc.)"/>
+        <FIELD NAME="activity_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="ID of the related activity"/>
+        <FIELD NAME="xp_earned" TYPE="number" LENGTH="8" NOTNULL="true" DECIMALS="2" SEQUENCE="false" COMMENT="XP earned in this event"/>
+        <FIELD NAME="reason" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" COMMENT="Description of why XP was awarded"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="userid_courseid" UNIQUE="false" FIELDS="userid, courseid" COMMENT="Index for user activity queries"/>
+        <INDEX NAME="activity_type" UNIQUE="false" FIELDS="activity_type" COMMENT="Index for activity type queries"/>
+        <INDEX NAME="timecreated" UNIQUE="false" FIELDS="timecreated" COMMENT="Index for chronological queries"/>
+      </INDEXES>
+    </TABLE>
+
+  </TABLES>
+</XMLDB>
