@@ -3,7 +3,7 @@
  * Learning Scorecard plugin capabilities definition
  *
  * @package    local_learning_scorecard
- * @copyright  2024 Your Name
+ * @copyright  2024 Miguel d'Aguiar
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
